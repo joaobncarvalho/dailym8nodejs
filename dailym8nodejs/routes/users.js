@@ -61,4 +61,11 @@ router.post('/insertnewrestaurante', async function(req, res, next) {
   res.status(result.status).send(result.result);
 });
 
+router.post('/insertnewtoldoservice', async function(req, res, next) {
+  let newToldoService = req.body;
+  //console.log("[usersRoutes] Saving user " + JSON.stringify(newUser));
+  let result = await usersModel.saveToldoService(newToldoService);
+  res.status(result.status).send(result.result);
+});
+
 module.exports = router;

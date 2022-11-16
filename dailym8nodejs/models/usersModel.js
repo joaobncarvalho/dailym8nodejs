@@ -81,20 +81,19 @@ module.exports.saveUser = async function(user) {
 }
 
 
-
-module.exports.saveRestaurante = async function(restaurante) {
+module.exports.saveToldoService = async function(toldoservice) {
 
     try {
 
         let sql =
             "INSERT " +
-            "INTO restaurant " +
-            "(establishment_name, establishment_description, restaurant_type_id, restaurante_number_tables) " +
-            "VALUES ($1, $2, $3, $4) " +
-            "RETURNING restaurant_id";
+            "INTO equipment_service " +
+            "(establishment_name, establishment_description, number_acomodacoes, equipment_service_name, establishment_utilizador_id) " +
+            "VALUES ($1, $2, $3, $4, $5) " +
+            "RETURNING equipment_service_id";
 
             //console.log(user.user_name + "|" + user.user_password + "|" + user.user_morada + "|" + user.user_email + "|" + user.user_points + "|" + user.user_admin + "|" + user.user_pt + "|" + user.user_nutri);
-        let result = await pool.query(sql, [restaurante.establishment_name, restaurante.establishment_description, restaurante.restaurant_type_id, restaurante.restaurante_number_tables]);
+        let result = await pool.query(sql, [toldoservice.establishment_name, toldoservice.establishment_description, toldoservice.number_acomodacoes, toldoservice.equipment_service_name, toldoservice.establishment_utilizador_id]);
         
         return { status: 200, result: result };
     } catch (err) {
@@ -103,6 +102,31 @@ module.exports.saveRestaurante = async function(restaurante) {
         return { status: 500, result: err };
     }
 }
+
+
+module.exports.saveRestaurante = async function(restaurante) {
+
+    try {
+
+        let sql =
+            "INSERT " +
+            "INTO restaurant " +
+            "(establishment_name, establishment_description, restaurant_type_id, restaurante_number_tables, establishment_utilizador_id) " +
+            "VALUES ($1, $2, $3, $4) " +
+            "RETURNING restaurant_id";
+
+            //console.log(user.user_name + "|" + user.user_password + "|" + user.user_morada + "|" + user.user_email + "|" + user.user_points + "|" + user.user_admin + "|" + user.user_pt + "|" + user.user_nutri);
+        let result = await pool.query(sql, [restaurante.establishment_name, restaurante.establishment_description, restaurante.restaurant_type_id, restaurante.restaurante_number_tables, restaurante.establishment_utilizador_id]);
+        
+        return { status: 200, result: result };
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+    }
+}
+
+
 
 //LOGIN
 
@@ -147,6 +171,4 @@ module.exports.authUser = async function(user){
         console.log(err);
         return { status: 500, result: {msg: 'wrong email or passsword'}};
     }
-
-
 }
