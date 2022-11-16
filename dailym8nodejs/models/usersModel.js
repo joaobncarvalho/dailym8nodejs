@@ -5,6 +5,19 @@ var salt = 10;
 //var bcrypt = require('bcrypt');
 //var salt = 10;
 
+module.exports.DeleteLike = async function(uti_id, est_id) {
+    try {
+        let sql = "DELETE FROM like_establishment " + "WHERE like_establishment.user_id = " + uti_id + " AND like_establishment.estabelecimento_id = " + est_id;
+        let result = await pool.query(sql);
+        let userfound = result.rows;
+        console.log("[usersModel.getUserDados] dados_utilizador = " + JSON.stringify(userfound));
+        return { status: 200, data: userfound };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
 module.exports.DeleteUser = async function(uti_id) {
     try {
         let sql = "DELETE FROM utilizador " + "WHERE utilizador.utilizador_id = " + uti_id;
@@ -45,6 +58,59 @@ module.exports.getUsers = async function() {
         return { status: 500, data: err };
     }
 }
+
+module.exports.getRandomRestaurants = async function() {
+    try {
+        let sql = "SELECT restaurant.establishment_id, restaurant.restaurant_id ,restaurant.establishment_name, restaurant.restaurant_type_id, restaurant.restaurante_number_tables, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name FROM restaurant " + "INNER JOIN type_restaurant ON type_restaurant.type_restaurant_id = restaurant.restaurant_type_id " + "ORDER BY random() LIMIT 8";
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.getRandomToldos = async function() {
+    try {
+        let sql = "SELECT equipment_service.establishment_id, equipment_service.equipment_service_id ,equipment_service.establishment_name, equipment_service.number_acomodacoes, equipment_service.equipment_service_name FROM equipment_service " + "ORDER BY random() LIMIT 8";
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.getRandomLugares = async function() {
+    try {
+        let sql = "SELECT parking_lot.establishment_id, parking_lot.parking_lot_id, parking_lot.establishment_name, parking_lot.parking_lot_number_spots FROM parking_lot ORDER BY random() LIMIT 8";
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.getSearchRestaurants = async function(search_string) {
+    try {
+        let sql = "SELECT restaurant.establishment_id, restaurant.restaurant_id ,restaurant.establishment_name, restaurant.restaurant_type_id, restaurant.restaurante_number_tables, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name FROM restaurant WHERE restaurant.establishment_name LIKE %" + search_string + "%";
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
 
 module.exports.saveUser = async function(user) {
 
@@ -125,6 +191,52 @@ module.exports.saveRestaurante = async function(restaurante) {
         return { status: 500, result: err };
     }
 }
+
+module.exports.saveEstacionamento = async function(estacionamento) {
+
+    try {
+
+        let sql =
+            "INSERT " +
+            "INTO parking_lot " +
+            "(establishment_name, establishment_description, parking_lot_number_spots, establishment_utilizador_id) " +
+            "VALUES ($1, $2, $3, $4) " +
+            "RETURNING parking_lot_id";
+
+            //console.log(user.user_name + "|" + user.user_password + "|" + user.user_morada + "|" + user.user_email + "|" + user.user_points + "|" + user.user_admin + "|" + user.user_pt + "|" + user.user_nutri);
+        let result = await pool.query(sql, [estacionamento.establishment_name, estacionamento.establishment_description, estacionamento.parking_lot_number_spots, estacionamento.establishment_utilizador_id]);
+        
+        return { status: 200, result: result };
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+    }
+}
+
+module.exports.saveLike = async function(like) {
+
+    try {
+
+        let sql =
+            "INSERT " +
+            "INTO like_establishment " +
+            "(user_id, estabelecimento_id) " +
+            "VALUES ($1, $2) " +
+            "RETURNING like_id";
+
+            //console.log(user.user_name + "|" + user.user_password + "|" + user.user_morada + "|" + user.user_email + "|" + user.user_points + "|" + user.user_admin + "|" + user.user_pt + "|" + user.user_nutri);
+        let result = await pool.query(sql, [like.user_id, like.estabelecimento_id]);
+        
+        return { status: 200, result: result };
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+    }
+}
+
+
 
 
 

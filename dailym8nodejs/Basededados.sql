@@ -234,3 +234,56 @@ ALTER TABLE utilizador ALTER COLUMN utilizador_type_id SET DEFAULT 1
 ALTER TABLE utilizador MODIFY utilizador_password varchar(600)
 
 ALTER TABLE utilizador ALTER COLUMN utilizador_password TYPE varchar(600);
+
+------------- NEW CODE AGAIN -----------------
+
+SELECT * FROM parking_lot
+
+ALTER TABLE parking_lot
+ADD CONSTRAINT fk_establishment_utilizador_id FOREIGN KEY(establishment_utilizador_id) REFERENCES utilizador (utilizador_id);
+ 
+ DROP TABLE user_like_establishment
+ 
+ SELECT * FROM like_establishment
+ 
+ CREATE TABLE like_establishment (
+ 
+   like_id serial primary key,
+   user_id int,
+   estabelecimento_id int
+ 
+ );
+ 
+ COUNT(like_establishment.estabelecimento_id)
+ SELECT restaurant.establishment_name FROM restaurant
+
+  SELECT restaurant.establishment_id, restaurant.establishment_name, restaurant.establishment_description, restaurant.restaurant_type_id, restaurant.restaurante_number_tables FROM restaurant
+ INNER JOIN like_establishment ON like_establishment.estabelecimento_id = restaurant.establishment_id
+ 
+ SELECT * FROM restaurant WHERE (SELECT COUNT(*) FROM user_like_establishment) > 2 ORDER BY random() LIMIT 8 
+ 
+ 
+ SELECT * FROM restaurant WHERE 
+ 
+ 
+  ALTER TABLE like_establishment
+ADD CONSTRAINT fk_estabelecimento_id FOREIGN KEY(estabelecimento_id) REFERENCES establishment (establishment_id);
+ 
+ ALTER TABLE like_establishment
+ADD CONSTRAINT fk_user_id FOREIGN KEY(user_id) REFERENCES utilizador (utilizador_id);
+
+
+SELECT parking_lot.establishment_id, parking_lot.parking_lot_id, parking_lot.establishment_name, parking_lot.parking_lot_number_spots FROM parking_lot
+ORDER BY random() LIMIT 8
+
+SELECT restaurant.establishment_id, restaurant.restaurant_id ,restaurant.establishment_name, restaurant.restaurant_type_id, restaurant.restaurante_number_tables, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name 
+FROM restaurant 
+INNER JOIN type_restaurant ON type_restaurant.type_restaurant_id = restaurant.restaurant_type_id
+WHERE restaurant.establishment_name LIKE 'Restaurante 1'
+ORDER BY random() LIMIT 8
+
+SELECT * FROM restaurant
+
+INNER JOIN type_restaurant ON type_restaurant.type_restaurant_id = restaurant.restaurant_type_id " + "ORDER BY random() LIMIT 8
+INSERT INTO restaurant (establishment_name, establishment_description, restaurant_type_id, restaurante_number_tables, establishment_utilizador_id)
+VALUES ('Name maré dos golfinhos', 'New desc', 1, 43,  2)

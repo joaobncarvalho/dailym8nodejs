@@ -52,6 +52,36 @@ router.put('/changetocreator/update/:idutilizador', async function(req, res, nex
 
 });
 
+router.get('/showrandomrestaurants', async function(req, res, next) {
+
+  let result = await usersModel.getRandomRestaurants();
+  res.status(result.status).send(result.data);
+
+});
+
+router.get('/showrandomtoldos', async function(req, res, next) {
+
+  let result = await usersModel.getRandomToldos();
+  res.status(result.status).send(result.data);
+
+});
+
+
+router.get('/searchforrestaurantswithname/:namestring', async function(req, res, next) {
+
+  let string = req.params.namestring;
+  let result = await usersModel.getSearchRestaurants(string);
+  res.status(result.status).send(result.data);
+
+});
+
+router.get('/showrandomlugares', async function(req, res, next) {
+
+  let result = await usersModel.getRandomLugares();
+  res.status(result.status).send(result.data);
+
+});
+
 /////////////// MÉTODO PARA GESTORES ////////////////////
 
 router.post('/insertnewrestaurante', async function(req, res, next) {
@@ -67,5 +97,31 @@ router.post('/insertnewtoldoservice', async function(req, res, next) {
   let result = await usersModel.saveToldoService(newToldoService);
   res.status(result.status).send(result.result);
 });
+
+router.post('/insertnewestacionamento', async function(req, res, next) {
+  let newEstacionamento = req.body;
+  //console.log("[usersRoutes] Saving user " + JSON.stringify(newUser));
+  let result = await usersModel.saveEstacionamento(newEstacionamento);
+  res.status(result.status).send(result.result);
+});
+
+router.post('/insertnewlike', async function(req, res, next) {
+  let newLike = req.body;
+  //console.log("[usersRoutes] Saving user " + JSON.stringify(newUser));
+  let result = await usersModel.saveLike(newLike);
+  res.status(result.status).send(result.result);
+});
+
+router.delete('/deletelike/:idutilizador/:idestabelecimento', async function(req,res, next){
+
+  let idutilizador = req.params.idutilizador; 
+  let idestabelecimento = req.params.idestabelecimento; 
+
+  console.log("[usersRoutes] Retrieving user with id " + id);
+  let result = await usersModel.DeleteLike(idutilizador, idestabelecimento);
+  res.status(result.status).send(result.data);
+
+});
+
 
 module.exports = router;
