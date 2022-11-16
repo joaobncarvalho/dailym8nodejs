@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discover Restaurantes</title>
+    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/15e6590408.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+</head>
+<body>
+
+    <nav class="navbar navbar-dark bg-dark fixed-top">
+        <img src="./images/logo-removebg-preview.png" style="width: 7%; height:210%; position:absolute; z-index: 13; margin-top: -0.5%;">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#" style="visibility: hidden;">Offcanvas dark navbar</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Menu</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+              <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="mainpage.html"> <i class="fa-solid fa-house-user"></i> Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#"><i class="fa-solid fa-newspaper"></i> Novidades</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"> <i class="fa-solid fa-info"></i> Sobre Nós</a>
+                  </li>
+                  <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Descobrir</h5>
+                  <li class="nav-item">
+                    <a class="nav-link" href="discoverrestaurants.html"> <i class="fa-solid fa-utensils"></i> Restaurantes</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="discovertoldos.html"> <i class="fa-solid fa-umbrella-beach"></i> Toldos</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="discoverestacionamento.html"> <i class="fa-solid fa-square-parking"></i> Estacionamentos</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="discoverpacks.html"> <i class="fa-solid fa-box-open"></i> Packs</a>
+                  </li>
+                  <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Perfil</h5>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#"> <i class="fa-solid fa-thumbs-up"></i> Restaurantes que gostei</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#"> <i class="fa-regular fa-thumbs-up"></i> Packs que gostei</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#"> <i class="fa-solid fa-user"></i> A minha conta</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#"> <i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                  </li>
+              </ul>
+              
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <h1 style="position: absolute; color:black; margin-top: 6%; margin-left:2%; font-size:30px; ">DESCOBRIR PACKS</h1>
+
+      <select class="form-select" style="margin-top:6%; margin-left: 74%; position: absolute; width: 17%;" aria-label="Default select example">
+        <option selected>Avaliar Custo</option>
+        <option value="1">Mais Caros</option>
+        <option value="2">Mais Baratos</option>
+      </select>
+
+      <select class="form-select" style="margin-top:6%; margin-left: 54%; position: absolute; width: 17%;" aria-label="Default select example">
+        <option selected>Tipo de Avaliação</option>
+        <option value="1">Melhor Avaliação</option>
+        <option value="2">Pior Avaliação</option>
+      </select>
+
+      <div id="suggestionrestaurantandbaritem" style="position: absolute; width:20%; height:40%; background-color:lightgray; border-radius: 7%; margin-left: 2%; margin-top: 10%;">
+
+        <h2 style="margin-top: 7%; margin-left: 36%; font-size: 25px; position:absolute;">NOME</h2>
+
+        <h3 style="margin-top: 49%; margin-left: 8%; font-size: 20px;">CRIADOR</h3>
+
+        <h3 style="margin-top: -2%; margin-left: 8%; font-size: 20px;">Nº LUGARES</h3>
+
+        <h3 style="margin-top: -2%; margin-left: 8%; font-size: 20px;">LIKES </h3>
+
+        <h3 style="margin-top: -2%; margin-left: 8%; font-size: 20px;">PREÇO </h3>
+
+        <a href="reserva.html"></a>
+        <button class="btn btn-primary" style="margin-top: -25%; margin-left: 60%;">RESERVAR</button>
+
+      </div>
+
+      <div id="organize1" style="width: 89%; height:90%; background-color: gray; z-index: -2; position: absolute; margin-top: 10%; margin-left: 2%;">
+
+      </div>
+     
+
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    
+</body>
+</html>

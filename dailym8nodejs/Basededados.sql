@@ -197,3 +197,40 @@ ADD CONSTRAINT fk_acomodacao_type_id FOREIGN KEY(acomodacao_type_id) REFERENCES 
 
 ALTER TABLE acomodacao
 ADD CONSTRAINT fk_acomodacao_equipment_service_id FOREIGN KEY(acomodacao_equipment_service_id) REFERENCES equipment_service (equipment_service_id);
+
+----------------------------------CODIGO DE TESTE (FALTA TERMINAR) ---------------------------------------------
+
+SELECT * FROM utilizador
+
+SELECT * FROM establishment
+
+SELECT * FROM restaurant
+
+INSERT INTO restaurant (establishment_name, establishment_description, restaurant_type_id, restaurante_number_tables)
+VALUES ('Restaurante 1', 'Descrição do restaurante 1', 1, 30)
+
+SELECT * FROM user_like_establishment
+
+ALTER TABLE user_like_establishment
+ADD CONSTRAINT fk_establishment_like_id FOREIGN KEY(establishment_like_id) REFERENCES establishment (establishment_id);
+
+ALTER TABLE user_like_establishment
+ADD CONSTRAINT fk_user_like_id FOREIGN KEY(user_like_id) REFERENCES utilizador (utilizador_id);
+
+----------------- REFAZER LIKE -----------------
+INSERT INTO user_like_establishment (user_like_id, establishment_like_id) 
+VALUES (1, 1)
+
+select * from user_like_establishment
+
+INSERT INTO type_restaurant (type_restaurant_name) VALUES ('Português')
+
+SELECT * FROM type_restaurant
+
+SELECT * FROM utilizador_type
+
+ALTER TABLE utilizador ALTER COLUMN utilizador_type_id SET DEFAULT 1
+
+ALTER TABLE utilizador MODIFY utilizador_password varchar(600)
+
+ALTER TABLE utilizador ALTER COLUMN utilizador_password TYPE varchar(600);
