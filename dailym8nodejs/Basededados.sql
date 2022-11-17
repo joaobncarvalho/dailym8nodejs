@@ -287,3 +287,68 @@ SELECT * FROM restaurant
 INNER JOIN type_restaurant ON type_restaurant.type_restaurant_id = restaurant.restaurant_type_id " + "ORDER BY random() LIMIT 8
 INSERT INTO restaurant (establishment_name, establishment_description, restaurant_type_id, restaurante_number_tables, establishment_utilizador_id)
 VALUES ('Name maré dos golfinhos', 'New desc', 1, 43,  2)
+
+SELECT *, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name FROM restaurant INNER JOIN type_restaurant ON type_restaurant.type_restaurant_id = restaurant.restaurant_type_id WHERE restaurant.restaurant_type_id = 
+
+ALTER TABLE plate ALTER COLUMN plate_availability SET DEFAULT '0'
+
+INSERT INTO restaurant (establishment_name, establishment_description, restaurant_type_id, restaurante_number_tables, establishment_utilizador_id)
+VALUES ('SDASDA', 'NeDSADSA', 1, 13,  2)
+
+SELECT * FROM restaurant
+
+
+
+CREATE TABLE plate_type (
+
+	plate_type_id serial primary key,
+	plate_type_name varchar(80)
+
+);
+
+INSERT INTO plate_type (plate_type_name) VALUES ('Aperitivos'), ('Entradas'), ('Pratos Principais'), ('Sobremesas'), ('Pratos do Dia')
+
+ALTER TABLE plate ADD COLUMN plate_availability bit
+
+ALTER TABLE plate ADD COLUMN plate_type_identifier INT
+
+ALTER TABLE plate ADD COLUMN plate_type_description varchar(800)
+
+ALTER TABLE plate
+ADD CONSTRAINT fk_plate_type_identifier FOREIGN KEY (plate_type_identifier) REFERENCES plate_type (plate_type_id)
+
+
+SELECT * FROM plate WHERE plate.plate_restaurant_id = 
+
+SELECT * FROM restaurant
+
+--------- OBTER PRATOS DE UM RESTAURANTE (MENU) --------
+
+SELECT plate.plate_id, plate.plate_name, plate.plate_price, plate.plate_restaurant_id, plate.plate_availability, plate.plate_type_identifier, plate.plate_type_description, plate_type.plate_type_id, plate_type.plate_type_name 
+FROM plate 
+INNER JOIN plate_type ON plate_type.plate_type_id = plate.plate_type_identifier 
+WHERE plate.plate_restaurant_id = 
+
+
+----------- FILTRAR PRATOS DE UM RESTAURANTE ----------
+SELECT plate.plate_id, plate.plate_name, plate.plate_price, plate.plate_restaurant_id, plate.plate_availability, restaurant.restaurant_id ,plate.plate_type_identifier, plate.plate_type_description, plate_type.plate_type_id, plate_type.plate_type_name FROM plate INNER JOIN plate_type ON plate_type.plate_type_id = plate.plate_type_identifier INNER JOIN restaurant ON restaurant.restaurant_id = plate.plate_restaurant_id WHERE plate_type.plate_type_id =  AND restaurant.restaurant_id = 
+
+------------ FILTRAR RESTAURANTES PELO SEU TIPO DE COMIDA -------
+
+SELECT * FROM type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name 
+
+SELECT *, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name FROM restaurant
+INNER JOIN type_restaurant ON type_restaurant.type_restaurant_id = restaurant.restaurant_type_id
+WHERE restaurant.restaurant_type_id = 
+
+INSERT INTO plate (plate_name, plate_price, plate_restaurant_id, plate_availability, plate_type_identifier, plate_type_description)
+VALUES ('Butter Breadsticks', 8.23, 2, '0', 1, 'Breadsticks made with butter and salt')
+
+
+
+
+
+
+
+
+--------------------------------------------------
