@@ -351,4 +351,62 @@ VALUES ('Butter Breadsticks', 8.23, 2, '0', 1, 'Breadsticks made with butter and
 
 
 
---------------------------------------------------
+-------------------------------------------------- SQL 17/11/2022 -------
+
+SELECT * FROM utilizador
+
+CREATE TABLE payment(
+
+  payment_id serial primary key,
+  payment_credit_card_number int NOT NULL,
+  cvc_payment int NOT NULL,
+  expiration_date_payment date NOT NULL,
+  date_payment date NOT NULL,
+  reservation_payment_id int not null
+);
+
+CREATE TABLE position_acomodacao (
+
+	position_acomodacao_id serial primary key,
+	position_line int NOT NULL,
+	position_column int NOT NULL,
+	acomodacao_identifier int NOT NULL
+
+);
+
+ALTER TABLE position_acomodacao 
+ADD CONSTRAINT fk_acomodacao_identifier FOREIGN KEY (acomodacao_identifier) REFERENCES acomodacao(acomodacao_id)
+
+drop table position_acomodacao
+
+SELECT  ,acomodacao.acomodacao_id, acomodacao.acomodacao_number, acomodacao.acomodacao_availability, acomodacao.acomodacao_type_id, acomodacao.acomodacao_equipment_service_id, position_acomodacao.position_acomodacao_id, position_acomodacao.position_line, position_acomodacao.position_column, position_acomodacao.acomodacao_identifier, acomodacao_type.acomodacao_type_id, acomodacao_type.acomodacao_type_name FROM acomodacao
+INNER JOIN position_acomodacao ON position_acomodacao.acomodacao_identifier = acomodacao.acomodacao_id 
+INNER JOIN acomodacao_type ON acomodacao_type.acomodacao_type_id = acomodacao.acomodacao_type_id
+WHERE 
+
+
+
+SELECT equipment_service.establishment_id, equipment_service.establishment_name, equipment_service.establishment_description, equipment_service.equipment_service_id, equipment_service.number_acomodacoes, equipment_service.equipment_service_name, equipment_service.establishment_utilizador_id, equipment_service.type_service_identifier, utilizador.utilizador_name FROM equipment_service INNER JOIN utilizador ON utilizador.utilizador_id = equipment_service.establishment_utilizador_id WHERE equipment_service.establishment_id = 
+
+ALTER TABLE acomodacao DROP COLUMN acomodacao_line
+
+
+ALTER TABLE acomodacao
+ADD COLUMN acomodacao_position_id  not null 
+
+ALTER TABLE payment
+ADD CONSTRAINT fk_reservation_payment_id FOREIGN KEY (reservation_payment_id) REFERENCES reservation (reservation_id)
+
+DROP TABLE payment
+
+ALTER TABLE payment ADD COLUMN reservation_payment_id int NOT NULL
+
+ALTER TABLE reservation DROP COLUMN payment_id_payment 
+
+ALTER TABLE reservation ADD COLUMN payment_id_payment int NOT NULL
+
+ALTER TABLE reservation 
+ADD CONSTRAINT fk_payment_id_payment FOREIGN KEY payment_id_payment REFERENCES payment (payment_id)
+
+
+
