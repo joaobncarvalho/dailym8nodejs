@@ -5,51 +5,358 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
+   
+    <script src="javascripts/map.js"></script>
+    <link rel="stylesheet" href="./css/mainpage.css">
+    <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVH9zsDCTHoGTwNdw3tA6f1MtfW2s1n5Y&libraries=places,geometry&callback=initMap&v=weekly" async defer></script>
 
-       #map{
+    
 
-        height:400px;
-        width:100%;
+  <!--Ligar o codigo JavaScript a um ficheiro JavaScript-->
 
-       }
-
-    </style>
 </head>
+
+<nav>
+  <!--Barra de navegação-->
+  <div style="background-color: #1e1f1e;" class="topnav">
+    <a href="index.html">
+      <img src="./images/logobranconobg.png" class="img-fluid"
+        style="cursor: pointer; position: absolute; margin-left: -99%; width: 180px; margin-top: -1%; height: 65px;">
+    </a>
+    <a id="profilehide" style="display: none;" href="dashboardTemplate.html">Perfil</a>
+    <a href="jornalfit.html"> Jornal FIT</a>
+    <a href="mainpage.html">FitHub</a>
+  </div>
+</nav>
+
 <body>
+
+  <!--
+  GEOCODER
+  <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.css' type='text/css' />
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>-->
+
+  <!--PERGUNTAR COMO ATRIBUIR DIFERENTES DISTANCIAS SEM REPETIR CODIGO IGUAL DE CSS, EM QUE SÓ ALTERA A POSIÇÃO (POUPAR CÓDIGO)-->
+
+  <section class="filterplaces">
+    <button id="filterplacesbtn" onclick="filterplacescoffee()"><b>CAFÉS</b></button>
+
+    <button id="filterplacesbtn2" onclick="filterplacesbares()"><b>BARES</b></button>
+
+    <button href="mainpage.html" id="filterplacesbtn3" onclick="filterplacesrestaurantes()"><b>RESTAURANTES</b></button>
+
+    <button type="button" onclick="filterplacesginasios()" id="filterplacesbtn4"><b>GINÁSIOS</b></button>
+
+  </section>
+
+
+  <div class="container">
+
+    <div id="mapa"
+      style='width: 782px; height: 500px; border: 1px solid #e8bf5c; margin-left: 240px; margin-top: 70px;'>
+
+
+      <!--INPUT PARA O GEOCODER-->
+
+      <input id="input" type="text"
+        style="height: 45px; width: 500px; position: absolute; border-radius: 17px; margin-top: 10px; margin-left: 274px; z-index: 1;"
+        placeholder="Inserir um local...">
+
+
+    </div>
+
+    <!--A VISIBILIDADE DOS BOTÕES É ALTERADA QUANDO UMA ROTA É RENDERIZADA-->
+
+    <button value="DRIVING"
+      style="width: 12%; height: 5%; font-size: 14px; z-index: 1; position: absolute; margin-top: -15px; margin-left: 900px; visibility: hidden;"
+      id="driving"><b>DRIVING</b></button>
+
+    <button value="WALKING"
+      style="width: 13%; height: 5%; font-size: 14px; margin-left: 540px; position: absolute; z-index: 1; margin-top: -15px; margin-left: 980px; visibility: hidden;"
+      id="walking"><b>WALKING</b></button>
+
+
+    <!--MAPA DO GOOGLE MAPS-->
+    <div id="map" style="width: 780px; height: 100%; position: absolute; margin-top: -500px; margin-left: 243px;">
+
+
+
+    </div>
+
+
+
+    <!--- <button onclick="execute()">EXECUTAR METODO</button> -->
+
+  </div>
+
+  <div
+    style="background-color: white; width: 780px; height: 25px; margin-left: 353px; margin-top: 572px; position: absolute;">
+
+    <h3 id="distanceshow"
+      style="color: #2d2e2d; font-family: Verdana, Geneva, Tahoma, sans-serif; position: absolute; margin-top: 1px; margin-left: 270px;">
+      NENHUMA ROTA CRIADA</h3>
+
+  </div>
+
+  <!--- <p><iframe class="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3113.461309133146!2d-9.15462138472065!3d38.707216579600434!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd1934838cfa1033%3A0x36de966c91888246!2sIADE%20-%20Creative%20University!5e0!3m2!1spt-PT!2spt!4v1648256962661!5m2!1spt-PT!2spt" width="900" height="550" style="border:0; position: absolute; margin-left: 290px; margin-top: 50px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" ></iframe></p> -->
+
+  <section class="eventospublicos">
+
+    <div id="rectangletotitle6">
+      <h2 style="text-align: center; color: white; font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: 19px;">
+        <b>EVENTOS<br>RECENTES</b>
+      </h2>
+    </div>
+
+    <div id="organize99" style="margin-left: 1250px; margin-top: 150px; position:absolute; gap: 10px;">
+
+
+
+
+    </div>
+
+    <hr
+      style="background-color: #e8bf5c; transform: rotate(180deg); width: 170px; color: #e8bf5c; position: absolute; margin-left: 1257px; margin-top: 125px;">
+
+    <a href="eventos.html">
+      <button id="seemorebtn1"><b>VER MAIS</b></button>
+    </a>
+
+  </section>
+
+  <section class="eventospublicos">
+
+    <div id="rectangletotitle7">
+      <h2 style="text-align: center; color: white; font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: 19px;">
+        <b>AULAS<br>MARCADAS</b>
+      </h2>
+    </div>
+
+    <div id="organize109" style="margin-left: 50px; margin-top: 150px; position:absolute; gap: 10px;">
+
+
+
+
+    </div>
+
+    <hr
+      style="background-color: #e8bf5c; transform: rotate(180deg); width: 170px; color: #e8bf5c; position: absolute; margin-left: 57px; margin-top: 125px;">
+
+    <a href="eventosmarcados.html">
+      <button id="seemorebtn2"><b>VER MAIS</b></button>
+    </a>
+
+  </section>
+
+  <script src='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js'></script>
+
+  <!--GEOCODING - SCRIPT-->
+  <script
+    src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js'></script>
+
+  <script>
+
+    /*///////////////não é possivel enviar dados para a bd - abortar mapbox? //////////////////////////////////
     
-    <h1>MAPA</h1>
+    //TOKEN DO MAPA
+        mapboxgl.accessToken = 'pk.eyJ1IjoibWlndWVsY3J1eiIsImEiOiJjbDI1djBzdmcwODhwM2RudTlleGRlZ2tpIn0.u31STaJqnZkr5QFGTgVD8w';
+    
+        //LIMITES DO MAPA (PORTUGAL CONTINENTAL)
+        const bounds = [
+          [-9.897438169534817, 36.85191635338956],
+          [-6.076692250400515, 42.20107808455899]
+        ];
+    
+    //MAPA
+        var map = new mapboxgl.Map({
+    
+          container: 'map',
+          // style: 'mapbox://styles/mapbox/streets-v11',
+          style: 'mapbox://styles/miguelcruz/cl25ywb6d000014mpgycvyq1w/draft', //URL DO ESTILO DO MAPA
+          center: [-9.166421750512969, 38.760943038193496], //CENTRO DO MAPA QUANDO ABERTO
+          zoom: 15, //ZOOM DO MAPA QUANDO ABERTO
+          maxBounds: bounds //LIMITES DO MAPA
+        });
+    
+         /*GEOCODING MAP
+    
+         const geocoder = new MapboxGeocoder({
+    
+           accessToken: mapboxgl.accessToken,
+           placeholder: 'Search nearby places..',
+           marker: {color: 'orange'},
+           bbox: [-9.897438169534817, 36.85191635338956, -6.076692250400515, 42.20107808455899],
+           proximity: {
+    
+              longitude: 38.736946,
+              latitude: -9.142685
+    
+           },
+           mapboxgl: mapboxgl
+    
+          
+    
+        });
+    
+    
+        //OBTER LOCALIZACAO ATUAL DO UTILIZADOR
+    
+       // Add geolocate control to the map.
+          map.addControl(
+            new mapboxgl.GeolocateControl({
+            positionOptions: {
+            enableHighAccuracy: true,
+          
+          },
+             // When active the map will receive updates to the device's location as it changes.
+             trackUserLocation: true,
+           // Draw an arrow next to the location dot to indicate which direction the device is heading.
+            showUserHeading: true
+    
+    
+          })
+         );
+    
+        //APÓS SELECIONAR UM LOCAL, COLOCAR UM MARCADOR NO MESMO (NECESSÁRIO PARA FAZER ESTILO DO MARCADOR APÓS O POST NA BD)
+    
+        
+    
+    
+        /*O 'marker' SERÁ INICIADO NO MAPA E REPPRESENTARÁ A POSICAO ATUAL DO UTILIZADOR
+    
+        const marker = new mapboxgl.Marker() // Initialize a new marker
+         .setLngLat([38.719222970322235, -9.14401262998581]) // Marker [lng, lat] coordinates
+         .addTo(map);
+    
+         map.addControl(geocoder); //ADICIONAR O GEOCODING AO MAPA
+    
+        */
 
-    <div id="map"></div>
+    var geojson = {
 
-
-    <script>
-
-       function initMap(){
-
-          var options = {
-
-             zoom: 8,
-             center:{lat: 42.3601, lng: -71.0589}
-
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "marker-color": "#00ff00",
+            "marker-size": "medium",
+            "marker-symbol": "",
+            "title": "Fonte Cruz",
+            "description": "Fonte Cruz Lisboa"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -9.14401262998581,
+              38.719222970322235
+            ]
           }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "marker-color": "#00ff00",
+            "marker-size": "medium",
+            "marker-symbol": "",
+            "title": "Hard Rock Café",
+            "description": "Hard Rock Café Lisboa"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -9.141755551099777,
+              38.716607029066886
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "marker-color": "#00ff00",
+            "marker-size": "medium",
+            "marker-symbol": "",
+            "title": "Café Buenos Aires",
+            "description": "Café Buenos Aires"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -9.14171,
+              38.71344
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "marker-color": "#00ff00",
+            "marker-size": "medium",
+            "marker-symbol": "",
+            "title": "Kalorias",
+            "description": "Ginásio Kalorias"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -9.24568,
+              38.70895
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "marker-color": "#00ff00",
+            "marker-size": "medium",
+            "marker-symbol": "",
+            "title": "F. Sabores",
+            "description": "Fábrica dos Sabore36s"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              -9.14401,
+              38.73691
+            ]
+          }
+        }
+      ]
+    };
 
-          var map = new
-          google.maps.Map(document.getElementById('map'), options);
+    /*
+    // add markers to map
+    for (const feature of geojson.features) { //percorrer a variavel 'geojson' e colocando marcadores
+      // create a HTML element for each feature
+      const el = document.createElement('div');
+      el.className = 'marker';
+
+      // make a marker for each feature and add it to the map
+      new mapboxgl.Marker(el)
+        .setLngLat(feature.geometry.coordinates) // obter coordenadas vindas da variavel 'geojson' 
+        .setPopup(
+          new mapboxgl.Popup({ offset: 25 }) // add popups
+            .setHTML(
+              `<h3>${feature.properties.title}</h3><p>${feature.properties.description}</p>`
+            )
+        )
+        .addTo(map); //adicionar ao mapa
+    }
+    */
+
+  </script>
 
 
-       }
+  <!--STRING API GEOCODING
 
+  https://api.mapbox.com/geocoding/v5/mapbox.places -->
 
-    </script>
+  <!--LOGO...
 
-    <!--TERMINAR PAGA DO MAPA-->
+  https://api.mapbox.com/geocoding/v5/mapbox.places/San%20Francisco.json?accessToken=pk.eyJ1IjoibWlndWVsY3J1eiIsImEiOiJjbDI1djBzdmcwODhwM2RudTlleGRlZ2tpIn0.u31STaJqnZkr5QFGTgVD8w -->
 
-
-<script async
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACJOCY_dVNmJ2GTYD4bKErFSuDey8h4KE&callback=initMap">
-</script>
-    
+  <!--<h4 style="color: white;">Username: <span id="usernameee"></span></h4>-->
 
 </body>
 </html>
