@@ -5,6 +5,8 @@ var salt = 10;
 //var bcrypt = require('bcrypt');
 //var salt = 10;
 
+
+//REMOVER UM LIKE
 module.exports.DeleteLike = async function(uti_id, est_id) {
     try {
         let sql = "DELETE FROM like_establishment " + "WHERE like_establishment.user_id = " + uti_id + " AND like_establishment.estabelecimento_id = " + est_id;
@@ -18,6 +20,8 @@ module.exports.DeleteLike = async function(uti_id, est_id) {
     }
 }
 
+//REMOVER UM UTILIZADOR
+
 module.exports.DeleteUser = async function(uti_id) {
     try {
         let sql = "DELETE FROM utilizador " + "WHERE utilizador.utilizador_id = " + uti_id;
@@ -30,6 +34,8 @@ module.exports.DeleteUser = async function(uti_id) {
         return { status: 500, data: err };
     }
 }
+
+//ALTERAR O TIPO DE UTILIZADOR PARA GESTOR
 
 module.exports.UpdateType = async function(utilizador_id){
 
@@ -46,6 +52,8 @@ module.exports.UpdateType = async function(utilizador_id){
 
 }
 
+//OBTER TODOS OS UTILIZADORES
+
 module.exports.getUsers = async function() {
     try {
         let sql = "select * from utilizador";
@@ -59,9 +67,11 @@ module.exports.getUsers = async function() {
     }
 }
 
+//SELECIONAR 50 RESTAURANTES ALEATÓRIOS
+
 module.exports.getRandomRestaurants = async function() {
     try {
-        let sql = "SELECT restaurant.establishment_id, restaurant.restaurant_id ,restaurant.establishment_name, restaurant.restaurant_type_id, restaurant.restaurante_number_tables, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name FROM restaurant " + "INNER JOIN type_restaurant ON type_restaurant.type_restaurant_id = restaurant.restaurant_type_id " + "ORDER BY random() LIMIT 8";
+        let sql = "SELECT restaurant.establishment_id, restaurant.restaurant_id ,restaurant.establishment_name, restaurant.restaurant_type_id, restaurant.restaurante_number_tables, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name FROM restaurant " + "INNER JOIN type_restaurant ON type_restaurant.type_restaurant_id = restaurant.restaurant_type_id " + "ORDER BY random() LIMIT 50";
         let result = await pool.query(sql);
         let users = result.rows;
         console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
@@ -87,7 +97,7 @@ module.exports.getRandomRestaurantsMainPage = async function() {
     }
 }
 
-//FILTRAR RESTAURANTES PELO SEU TIPO DE COMIDA
+//FILTRAR RESTAURANTES PELO SEU TIPO DE COMIDA (TIPO DE RESTAURANTE)
 
 module.exports.getRestaurantFilter = async function(restaurant_type_identifier) {
     try {
@@ -102,12 +112,12 @@ module.exports.getRestaurantFilter = async function(restaurant_type_identifier) 
     }
 }
 
-
+//GERAR ALEATORIAMENTE 120 SERVIÇOS DIFERENTES DE TOLDOS
 
 
 module.exports.getRandomToldos = async function() {
     try {
-        let sql = "SELECT equipment_service.establishment_id, equipment_service.equipment_service_id ,equipment_service.establishment_name, equipment_service.number_acomodacoes, equipment_service.equipment_service_name FROM equipment_service " + "ORDER BY random() LIMIT 8";
+        let sql = "SELECT equipment_service.establishment_id, equipment_service.equipment_service_id ,equipment_service.establishment_name, equipment_service.number_acomodacoes, equipment_service.equipment_service_name FROM equipment_service " + "ORDER BY random() LIMIT 120";
         let result = await pool.query(sql);
         let users = result.rows;
         console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
@@ -118,9 +128,11 @@ module.exports.getRandomToldos = async function() {
     }
 }
 
+//GERAR ALEATORIAMENTE 120 SERVIÇOS DIFERENTES DE PARQUES
+
 module.exports.getRandomLugares = async function() {
     try {
-        let sql = "SELECT parking_lot.establishment_id, parking_lot.parking_lot_id, parking_lot.establishment_name, parking_lot.parking_lot_number_spots FROM parking_lot ORDER BY random() LIMIT 8";
+        let sql = "SELECT parking_lot.establishment_id, parking_lot.parking_lot_id, parking_lot.establishment_name, parking_lot.parking_lot_number_spots FROM parking_lot ORDER BY random() LIMIT 50";
         let result = await pool.query(sql);
         let users = result.rows;
         console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
@@ -130,6 +142,8 @@ module.exports.getRandomLugares = async function() {
         return { status: 500, data: err };
     }
 }
+
+//TERMINAR --> PESQUISA POR NOME DE RESTAURANTES
 
 module.exports.getSearchRestaurants = async function(search_string) {
     try {
@@ -144,6 +158,7 @@ module.exports.getSearchRestaurants = async function(search_string) {
     }
 }
 
+//REGISTO DE UTILIZADOR
 
 module.exports.saveUser = async function(user) {
 
@@ -179,6 +194,7 @@ module.exports.saveUser = async function(user) {
     }
 }
 
+//CRIAÇÃO DE UM SISTEMA DE TOLDOS
 
 module.exports.saveToldoService = async function(toldoservice) {
 
@@ -202,6 +218,7 @@ module.exports.saveToldoService = async function(toldoservice) {
     }
 }
 
+//CRIAÇÃO DE UM SISTEMA DE RESTAURANTE
 
 module.exports.saveRestaurante = async function(restaurante) {
 
@@ -225,6 +242,8 @@ module.exports.saveRestaurante = async function(restaurante) {
     }
 }
 
+//CRIAÇÃO DE UM SISTEMA DE ESTACIONAMENTO
+
 module.exports.saveEstacionamento = async function(estacionamento) {
 
     try {
@@ -246,6 +265,8 @@ module.exports.saveEstacionamento = async function(estacionamento) {
         return { status: 500, result: err };
     }
 }
+
+//GUARDAR UM LIKE NUM ESTABELECIMENTO
 
 module.exports.saveLike = async function(like) {
 
@@ -273,7 +294,7 @@ module.exports.saveLike = async function(like) {
 
 
 
-//LOGIN
+//LOGIN DO UTILIZADOR
 
 module.exports.authUser = async function(user){
 
@@ -335,6 +356,8 @@ module.exports.getQuantityAvailableAcomodacoes = async function(service_id) {
     }
 }
 
+//DETALHES DE UM SISTEMA DE TOLDOS PARA RESERVA
+
 module.exports.getToldoDetailsForReserva = async function(est_id) {
     try {
         let sql = "SELECT equipment_service.establishment_id, equipment_service.establishment_name, equipment_service.establishment_description, equipment_service.equipment_service_id, equipment_service.number_acomodacoes, equipment_service.equipment_service_name, equipment_service.establishment_utilizador_id, equipment_service.type_service_identifier, utilizador.utilizador_name FROM equipment_service INNER JOIN utilizador ON utilizador.utilizador_id = equipment_service.establishment_utilizador_id WHERE equipment_service.establishment_id = " + est_id;
@@ -349,19 +372,23 @@ module.exports.getToldoDetailsForReserva = async function(est_id) {
 
 }
 
+
+
 ////// MÉTODO PARA VISUALIZAR OS TOLDOS DISPONIVEIS DEPOIS DE CLICAR NO BOTÃO 'VER TOLDOS' EM VEZ DE 'VER MENU' ////////
 
 /*///////////////////// QUERY PARA COMPLETAR //////////////////////////
 
-SELECT  ,acomodacao.acomodacao_id, acomodacao.acomodacao_number, acomodacao.acomodacao_availability, acomodacao.acomodacao_type_id, acomodacao.acomodacao_equipment_service_id, position_acomodacao.position_acomodacao_id, position_acomodacao.position_line, position_acomodacao.position_column, position_acomodacao.acomodacao_identifier, acomodacao_type.acomodacao_type_id, acomodacao_type.acomodacao_type_name FROM acomodacao
-INNER JOIN position_acomodacao ON position_acomodacao.acomodacao_identifier = acomodacao.acomodacao_id 
+SELECT *, acomodacao_type.acomodacao_type_id, acomodacao_type.acomodacao_type_name, equipment_service.equipment_service_id FROM acomodacao
 INNER JOIN acomodacao_type ON acomodacao_type.acomodacao_type_id = acomodacao.acomodacao_type_id
-WHERE 
+INNER JOIN equipment_service ON equipment_service.equipment_service_id = acomodacao.acomodacao_equipment_service_id
+WHERE equipment_service.equipment_service_id = est_id AND acomodacao.acomodacao_availability = '0'
 */
+
+//OBTER ACOMODACOES DISPONIVEIS APOS CLICAR NO BOTÃO 'VER TODOS'
 
 module.exports.getToldoServiceAcomodacoes = async function(est_id) {
     try {
-        let sql = "SELECT plate.plate_id, plate.plate_name, plate.plate_price, plate.plate_restaurant_id, plate.plate_availability, plate.plate_type_identifier, plate.plate_type_description, plate_type.plate_type_id, plate_type.plate_type_name FROM plate INNER JOIN plate_type ON plate_type.plate_type_id = plate.plate_type_identifier WHERE plate.plate_restaurant_id = " + est_id;
+        let sql = "SELECT *, acomodacao_type.acomodacao_type_id, acomodacao_type.acomodacao_type_name, equipment_service.equipment_service_id, position_acomodacao.position_acomodacao_id, position_acomodacao.position_line, position_acomodacao.position_column, position_acomodacao.acomodacao_identifier FROM acomodacao INNER JOIN position_acomodacao ON position_acomodacao.acomodacao_identifier = acomodacao.acomodacao_id INNER JOIN acomodacao_type ON acomodacao_type.acomodacao_type_id = acomodacao.acomodacao_type_id INNER JOIN equipment_service ON equipment_service.equipment_service_id = acomodacao.acomodacao_equipment_service_id WHERE equipment_service.equipment_service_id = " + est_id + " AND acomodacao.acomodacao_availability = '0'";
         let result = await pool.query(sql);
         let users = result.rows;
         console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
@@ -373,10 +400,27 @@ module.exports.getToldoServiceAcomodacoes = async function(est_id) {
 }
 
 
+
+///////////////////// MÉTODO PARA FILTRAR AS ACOMODAÇÕES PELA LINHA /////////////////////////
+
+module.exports.getToldoServiceAcomodacoesFilter = async function(est_id, line_value) {
+    try {
+        let sql = "SELECT *, acomodacao_type.acomodacao_type_id, acomodacao_type.acomodacao_type_name, position_acomodacao.position_acomodacao_id, position_acomodacao.position_line, position_acomodacao.position_column, position_acomodacao.acomodacao_identifier FROM acomodacao INNER JOIN acomodacao_type ON acomodacao_type.acomodacao_type_id = acomodacao.acomodacao_type_id INNER JOIN position_acomodacao ON position_acomodacao.acomodacao_identifier = acomodacao.acomodacao_id WHERE position_acomodacao.position_line = " + line_value + " AND acomodacao.acomodacao_equipment_service_id = " + est_id;
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
 ////// MÉTODO PARA O DROPDOWN DOS TOLDOS DISPONIVEIS NA TELA DE CONFIRMAR RESERVA //////
 
 ////////////////// MÉTODOS PARA RESERVA DE RESTAURANTE ///////////////////
 
+//OBTER DETALHES DE UM SERVIÇO DE RESTAURANTE PARA A RESERVA
 module.exports.getRestaurantDetailsForReserva = async function(est_id) {
     try {
         let sql = "SELECT restaurant.establishment_id, restaurant.restaurant_id ,restaurant.establishment_name, restaurant.restaurant_type_id, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name FROM restaurant " + "INNER JOIN type_restaurant ON type_restaurant.type_restaurant_id = restaurant.restaurant_type_id " + "WHERE restaurant.establishment_id = " + est_id;
@@ -389,6 +433,22 @@ module.exports.getRestaurantDetailsForReserva = async function(est_id) {
         return { status: 500, data: err };
     }
 }
+
+//FILTRAR MESAS DISPONIVEIS DE UM RESTAURANTE (INTERIOR E EXTERIOR) - QUESTÃO SOBRE MULTIPLOS OPERADORES 'AND' EM CLAUSULAS 'WHERE'
+module.exports.getRestaurantTablesFilter = async function(rest_id, table_type_id) {
+    try {
+        let sql = "SELECT *, mesa_type.mesa_type_id, mesa_type.mesa_type_name FROM mesa INNER JOIN mesa_type ON mesa_type.mesa_type_id = mesa.mesa_type_id WHERE mesa.mesa_restaurant_id = " + rest_id + " AND mesa.mesa_availability = '0' AND mesa.mesa_type_id = " + table_type_id;
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+//OBTER DETALHES DE UM SERVIÇO DE RESTAURANTE PARA A RESERVA (QUANTIDADE DE MESAS DISPONIVEL)
 
 module.exports.getQuantityAvailableTables = async function(rest_id) {
     try {
@@ -403,6 +463,38 @@ module.exports.getQuantityAvailableTables = async function(rest_id) {
     }
 }
 
+/////ORDENAR MESAS DISPONIVEIS PELO PREÇO (QUANDO VISUALIZADOS - ASCENDENTE)
+
+module.exports.getOrdenateAscendentTables = async function(rest_id) {
+    try {
+        let sql = "SELECT *, mesa_type.mesa_type_id, mesa_type.mesa_type_name FROM mesa INNER JOIN mesa_type ON mesa_type.mesa_type_id = mesa.mesa_type_id WHERE mesa.mesa_restaurant_id = " + rest_id + " AND mesa.mesa_availability = '0' ORDER BY mesa.mesa_price ASC";
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+/////ORDENAR MESAS DISPONIVEIS PELO PREÇO (QUANDO VISUALIZADOS - DESCENDENTE)
+
+module.exports.getOrdenateDescendentTables = async function(rest_id) {
+    try {
+        let sql = "SELECT *, mesa_type.mesa_type_id, mesa_type.mesa_type_name FROM mesa INNER JOIN mesa_type ON mesa_type.mesa_type_id = mesa.mesa_type_id WHERE mesa.mesa_restaurant_id = " + rest_id + " AND mesa.mesa_availability = '0' ORDER BY mesa.mesa_price DESC";
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+//OBTER TODOS OS PRATOS DE UM RESTAURANTE (GESTORES)
+
 module.exports.getRestaurantPlates = async function(est_id) {
     try {
         let sql = "SELECT plate.plate_id, plate.plate_name, plate.plate_price, plate.plate_restaurant_id, plate.plate_availability, plate.plate_type_identifier, plate.plate_type_description, plate_type.plate_type_id, plate_type.plate_type_name FROM plate INNER JOIN plate_type ON plate_type.plate_type_id = plate.plate_type_identifier WHERE plate.plate_restaurant_id = " + est_id;
@@ -416,9 +508,11 @@ module.exports.getRestaurantPlates = async function(est_id) {
     }
 }
 
+//FILTRAR OS PRATOS DISPONIVEIS DE UM RESTAURANTE PELO SEU TIPO DE PRATO
+
 module.exports.getRestaurantPlatesFilter = async function(est_id, plate_identifier) {
     try {
-        let sql = "SELECT plate.plate_id, plate.plate_name, plate.plate_price, plate.plate_restaurant_id, plate.plate_availability, restaurant.restaurant_id ,plate.plate_type_identifier, plate.plate_type_description, plate_type.plate_type_id, plate_type.plate_type_name FROM plate INNER JOIN plate_type ON plate_type.plate_type_id = plate.plate_type_identifier INNER JOIN restaurant ON restaurant.restaurant_id = plate.plate_restaurant_id WHERE plate_type.plate_type_id = " + plate_identifier + " AND restaurant.restaurant_id = " + est_id;
+        let sql = "SELECT plate.plate_id, plate.plate_name, plate.plate_price, plate.plate_restaurant_id, plate.plate_availability, restaurant.restaurant_id ,plate.plate_type_identifier, plate.plate_type_description, plate_type.plate_type_id, plate_type.plate_type_name FROM plate INNER JOIN plate_type ON plate_type.plate_type_id = plate.plate_type_identifier INNER JOIN restaurant ON restaurant.restaurant_id = plate.plate_restaurant_id WHERE plate_type.plate_type_id = " + plate_identifier + " AND restaurant.restaurant_id = " + est_id + " AND plate.plate_availability= '0'";
         let result = await pool.query(sql);
         let users = result.rows;
         console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
@@ -446,7 +540,7 @@ module.exports.getRestaurantPlates = async function(est_id) {
 
 ///////////////// MÉTODOS DE GESTÃO DE SERVIÇOS DE RESTAURANTE ///////////////////
 
-//CRIAÇÃO DE PRATOS NUM RESTAURANTE (MENU DO RESTAURANTE)
+//CRIAÇÃO DE PRATOS NUM RESTAURANTE (MENU DO RESTAURANTE - MÉTODO DE GESTOR)
 
 module.exports.savePlate = async function(plate) {
 
@@ -502,6 +596,8 @@ module.exports.UpdateAvailabilityOffPlate = async function(plate_id){
 
 }
 
+//APAGAR UM PRATO DO MENU
+
 module.exports.DeletePrato = async function(plate_id) {
     try {
         let sql = "DELETE FROM plate " + "WHERE plate.plate_id = " + plate_id;
@@ -519,7 +615,7 @@ module.exports.DeletePrato = async function(plate_id) {
 
 
 
-//TERMINAR
+//TERMINAR -> OBTER A QUANTIDADE DE LIKES DE UM ESTABELECIMENTO DE RESTAURAÇÃO
 
 module.exports.getQuantityLikesRestaurant = async function(rest_id) {
     try {
@@ -539,6 +635,129 @@ module.exports.getQuantityLikesRestaurant = async function(rest_id) {
 module.exports.getCheckEstabelecimento = async function(uti_id, est_id) {
     try {
         let sql = "SELECT COUNT(*) FROM like_establishment WHERE estabelecimento_id = " + rest_id;
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+//////////////////////////// POST DE UMA ACOMODACAO POR UM GESTOR (ACOMODACAO E A SUA POSIÇÃO)
+
+module.exports.saveAcomodacaoObject = async function(acomodacao) {
+
+    try {
+
+        let sql =
+            "INSERT " +
+            "INTO acomodacao " +
+            "(acomodacao_number, acomodacao_type_id, acomodacao_equipment_service_id, acomodacao_price) " +
+            "VALUES ($1, $2, $3, $4) " +
+            "RETURNING acomodacao_id";
+
+            //console.log(user.user_name + "|" + user.user_password + "|" + user.user_morada + "|" + user.user_email + "|" + user.user_points + "|" + user.user_admin + "|" + user.user_pt + "|" + user.user_nutri);
+        let result = await pool.query(sql, [acomodacao.acomodacao_number, acomodacao.acomodacao_type_id, acomodacao.acomodacao_equipment_service_id, acomodacao.acomodacao_price]);
+        
+        return { status: 200, result: result };
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+    }
+}
+
+module.exports.saveAcomodacaoPosition = async function(position) {
+
+    try {
+
+        let sql =
+            "INSERT " +
+            "INTO position_acomodacao " +
+            "(position_line, position_column, acomodacao_identifier) " +
+            "VALUES ($1, $2, $3) " +
+            "RETURNING position_acomodacao_id";
+
+            //console.log(user.user_name + "|" + user.user_password + "|" + user.user_morada + "|" + user.user_email + "|" + user.user_points + "|" + user.user_admin + "|" + user.user_pt + "|" + user.user_nutri);
+        let result = await pool.query(sql, [position.position_line, position.position_column, position.acomodacao_identifier]);
+        
+        return { status: 200, result: result };
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+    }
+}
+
+////////////////////////////////////// MÉTODOS DE LUGARES E ESTACIONAMENTO /////////////////////////////////////////
+
+/////OBTER DETALHES DE UM PARQUE DE ESTACIONAMENTO
+
+module.exports.getDetailsParqueEstacionamento = async function(est_id) {
+    try {
+        let sql = "SELECT * FROM parking_lot WHERE parking_lot.parking_lot_id = " + est_id;
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+/////OBTER A QUANTIDADE DE LUGARES DISPONIVEIS (EXIBIR NOS DETALHES)
+
+module.exports.getQuantityAvailableParkingLots = async function(rest_id) {
+    try {
+        let sql = "SELECT COUNT(*) FROM spot WHERE spot_availability = '0' AND spot.spot_parking_lot_id = " + rest_id;
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+/////ORDENAR LUGARES DISPONIVEIS PELO PREÇO (QUANDO VISUALIZADOS - ASCENDENTE)
+
+module.exports.getOrdenateAscendentParkingLot = async function(rest_id) {
+    try {
+        let sql = "SELECT * FROM spot WHERE spot.spot_parking_lot = " + rest_id +  " AND spot.spot_availability = '0' ORDER BY spot.spot_price ASC;";
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+/////ORDENAR LUGARES DISPONIVEIS PELO PREÇO (QUANDO VISUALIZADOS - DESCENDENTE)
+
+module.exports.getOrdenateDescendentParkingLot = async function(rest_id) {
+    try {
+        let sql = "SELECT * FROM spot WHERE spot.spot_parking_lot = " + rest_id +  " AND spot.spot_availability = '0' ORDER BY spot.spot_price DESC;";
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+/////VISUALIZAR LUGARES DISPONIVEIS NUM PARQUE DE ESTACIONAMENTO
+
+module.exports.getParkingLots = async function(rest_id) {
+    try {
+        let sql = "SELECT * FROM spot WHERE spot.spot_parking_lot_id = " + rest_id + " AND spot.spot_availability = '0'";
         let result = await pool.query(sql);
         let users = result.rows;
         console.log("[usersModel.getUsers] users = " + JSON.stringify(users));

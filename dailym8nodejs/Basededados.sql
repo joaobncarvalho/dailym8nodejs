@@ -410,3 +410,150 @@ ADD CONSTRAINT fk_payment_id_payment FOREIGN KEY payment_id_payment REFERENCES p
 
 
 
+
+
+
+
+
+----------------- OBTER ACOMODACOES DISPONIVEIS DE UM SERVIÇO DE TOLDOS --------------
+
+SELECT *, acomodacao_type.acomodacao_type_id, acomodacao_type.acomodacao_type_name, equipment_service.equipment_service_id FROM acomodacao
+INNER JOIN acomodacao_type ON acomodacao_type.acomodacao_type_id = acomodacao.acomodacao_type_id
+INNER JOIN equipment_service ON equipment_service.equipment_service_id = acomodacao.acomodacao_equipment_service_id
+WHERE equipment_service.equipment_service_id = 1 AND acomodacao.acomodacao_availability = '0'
+
+------------------ FILTRAR ACOMODACOES POR LINHA ----------------------------------
+
+
+
+INSERT INTO equi
+
+SELECT * FROM equipment_service
+
+INSERT INTO equipment_service (establishment_name, establishment_description, number_acomodacoes, equipment_service_name, establishment_utilizador_id)
+VALUES ('Toldos Teste 1', 'Descrição do teste 1 do serviço de toldos', 32, 'Toldos Teste 1', 2)
+
+ALTER TABLE acomodacao ALTER COLUMN acomodacao_availability SET DEFAULT '0'
+
+
+
+
+
+----- ADICIONAR UMA ACOMODAÇÃO (PARA GESTORES) ---------------
+
+---- FIRST POST -----
+INSERT INTO acomodacao (acomodacao_number, acomodacao_type_id, acomodacao_equipment_service_id, acomodacao_price)
+VALUES (1, 1, 1, 12.4)
+
+----- SECOND POST -----
+
+INSERT INTO position_acomodacao (position_line, position_column, acomodacao_identifier)
+VALUES (1,1,1)
+
+---------------------------------------------------------------
+
+---------- GERAR SERVIÇOS ALEATORIOS DE TOLDOS DE PRAIA -------------
+
+SELECT * FROM equipment_service ORDER BY random() LIMIT 50
+
+
+-----------------------------------------------------------------------
+
+----------------
+
+------------ FILTRAR ACOMODACOES PELA LINHA --------------
+
+SELECT *, acomodacao_type.acomodacao_type_id, acomodacao_type.acomodacao_type_name, position_acomodacao.position_acomodacao_id, position_acomodacao.position_line, position_acomodacao.position_column, position_acomodacao.acomodacao_identifier FROM acomodacao
+INNER JOIN acomodacao_type ON acomodacao_type.acomodacao_type_id = acomodacao.acomodacao_type_id
+INNER JOIN position_acomodacao ON position_acomodacao.acomodacao_identifier = acomodacao.acomodacao_id
+WHERE position_acomodacao.position_line =  AND acomodacao.acomodacao_equipment_service_id = 
+
+----------------------------------------------------------
+
+----------- 
+
+ALTER TABLE acomodacao 
+ADD COLUMN acomodacao_price real 
+
+ALTER TABLE acomodacao
+ALTER COLUMN acomodacao_price set default 1
+
+ALTER TABLE mesa
+ADD COLUMN mesa_price real default 1
+
+ALTER TABLE spot
+ADD COLUMN mesa_price real default 1
+
+---------------------------------------------- OBTER TOLDOS DISPONIVEIS -------------
+
+SELECT *, acomodacao_type.acomodacao_type_id, acomodacao_type.acomodacao_type_name, equipment_service.equipment_service_id, position_acomodacao.position_acomodacao_id, position_acomodacao.position_line, position_acomodacao.position_column, position_acomodacao.acomodacao_identifier FROM acomodacao
+INNER JOIN position_acomodacao ON position_acomodacao.acomodacao_identifier = acomodacao.acomodacao_id
+INNER JOIN acomodacao_type ON acomodacao_type.acomodacao_type_id = acomodacao.acomodacao_type_id
+INNER JOIN equipment_service ON equipment_service.equipment_service_id = acomodacao.acomodacao_equipment_service_id
+WHERE equipment_service.equipment_service_id = 1 AND acomodacao.acomodacao_availability = '0'
+
+---------------------------------------- ORDENAR OS TOLDOS PELO PREÇO -----------------
+
+---------------------------------------------- MÉTODOS PARA ESTACIONAMENTO ---------------------------------------------
+
+----- VISUALIZAR OS PARQUES (50 ALEATORIOS)  -> FEITO -----
+
+
+
+
+----- OBTER DETALHES DE UM PARQUE -----
+
+SELECT * FROM parking_lot WHERE parking_lot.parking_lot_id = 'id do parque'
+
+
+----- OBTER A QUANTIDADE DE LUGARES DISPONIVEIS (EXIBIR NOS DETALHES) -----
+
+SELECT COUNT(*) FROM spot WHERE spot_availability = '0' AND spot.spot_parking_lot_id = 'id do parque'
+
+
+----- ORDENAR LUGARES DISPONIVEIS PELO PREÇO (QUANDO VISUALIZADOS - ASCENDENTE) -----
+
+SELECT * FROM spot WHERE spot.spot_parking_lot = 'id do parque' ORDER BY spot.spot_price ASC;
+
+------ OBTER TODOS OS SPOTS DISPONIVEIS (VISUALIZAÇÃO) -------
+
+SELECT * FROM spot WHERE spot.spot_parking_lot_id = AND spot.spot_availability = '0'
+
+------------------------------------------ METODOS DE MÉTODO DE RESERVA -----------------------------------------
+
+----- RESERVAR UM SPOT (POST) ------
+
+----- PASSOS PARA UM POST BEM SUCEDIDO -----
+
+-- 1 PASSO: O UTILIZADOR ACEDE AOS DETALHES DA RESERVA, INSERINDO OS 
+
+
+----- RESERVAR UM SPOT (UPDATE/PUT Á DISPONIBILIDADE DO SPOT RESERVADO) -----
+
+
+
+----- ELIMINAR UMA RESERVA (UPDATE/PUT Á INDISPONIBILIDADE DO SPOT DESRESERVADO) ----
+
+
+
+----- RESERVAR UMA MESA (POST) ------
+
+
+
+----- RESERVAR UMA MESA (UPDATE/PUT Á DISPONIBILIDADE DA MESA RESERVADA) -----
+
+
+
+----- ELIMINAR UMA RESERVA (UPDATE/PUT Á INDISPONIBILIDADE DA MESA DESRESERVADA) ----
+
+
+
+----- RESERVAR UMA ACOMODACAO (POST) ------
+
+
+
+----- RESERVAR UMA ACOMODACAO (UPDATE/PUT Á DISPONIBILIDADE DA ACOMODACAO RESERVADO) -----
+
+
+
+----- ELIMINAR UMA RESERVA (UPDATE/PUT Á INDISPONIBILIDADE DA ACOMODACAO DESRESERVADA) ----
