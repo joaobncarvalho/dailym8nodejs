@@ -1846,6 +1846,7 @@ header.sticky a.open_close, .header_in a.open_close {
 
 #logo {
   float: left;
+  margin-top: -6.5%;
 }
 @media (max-width: 991px) {
   #logo {
@@ -1854,8 +1855,8 @@ header.sticky a.open_close, .header_in a.open_close {
     text-align: center;
   }
   #logo img {
-    width: auto;
-    height: 28px;
+    width: 28px;
+    height: auto;
   }
 }
 
