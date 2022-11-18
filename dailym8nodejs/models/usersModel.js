@@ -564,6 +564,55 @@ module.exports.savePlate = async function(plate) {
     }
 }
 
+//CRIAÇÃO DE UMA MESA NO RESTAURANTE (INICIALMENTE NA SUA CRIAÇÃO, ELA POSSUI O ESTADO DISPONIVEL)
+
+module.exports.saveMesa = async function(mesa) {
+
+    try {
+
+        let sql =
+            "INSERT " +
+            "INTO mesa " +
+            "(mesa_number, mesa_size, mesa_restaurant_id, mesa_type_id, mesa_price) " +
+            "VALUES ($1, $2, $3, $4, $5) " +
+            "RETURNING mesa_id";
+
+            //console.log(user.user_name + "|" + user.user_password + "|" + user.user_morada + "|" + user.user_email + "|" + user.user_points + "|" + user.user_admin + "|" + user.user_pt + "|" + user.user_nutri);
+        let result = await pool.query(sql, [mesa.mesa_number, mesa.mesa_size, mesa.mesa_restaurant_id, mesa.mesa_type_id, mesa.mesa_price]);
+        
+        return { status: 200, result: result };
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+    }
+}
+
+//CRIAÇÃO DE UM SPOT NUM ESTACIONAMENTO
+module.exports.saveSpot = async function(spot) {
+
+    try {
+
+        let sql =
+            "INSERT " +
+            "INTO spot " +
+            "(spot_price, spot_parking_lot_id, spot_number) " +
+            "VALUES ($1, $2, $3) " +
+            "RETURNING spot_id";
+
+            //console.log(user.user_name + "|" + user.user_password + "|" + user.user_morada + "|" + user.user_email + "|" + user.user_points + "|" + user.user_admin + "|" + user.user_pt + "|" + user.user_nutri);
+        let result = await pool.query(sql, [spot.spot_price, spot.spot_parking_lot_id, spot.spot_number]);
+        
+        return { status: 200, result: result };
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+    }
+}
+
+
+
 // ALTERAR DISPONIBILIDADE DO PRATO | Disponivel: 1 | Indisponivel: 0 | AMBAS AS FUNÇÕES SERÃO INTEGRADAS NUMA VERIFICACAO DO TIPO 'IF'
 
 module.exports.UpdateAvailabilityOnPlate = async function(plate_id){
@@ -767,3 +816,4 @@ module.exports.getParkingLots = async function(rest_id) {
         return { status: 500, data: err };
     }
 }
+

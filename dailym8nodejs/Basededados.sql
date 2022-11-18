@@ -12,6 +12,42 @@ CREATE TABLE spot (
 ALTER TABLE spot
 ADD CONSTRAINT fk_spot_parking_lot_id FOREIGN KEY(spot_parking_lot_id) REFERENCES parking_lot (parking_lot_id);
 
+-----------------LOCAIS COM POSTGIS-------------------------------
+
+---------- POST DE LOCAL COM POSTGIS ------------------
+
+INSERT INTO place (local_morada, geometry_info_point) 
+VALUES ('Av. República 10F, 1050-191 Lisboa', 'POINT(38.735610682743214 -9.14492507561783)')
+
+CREATE EXTENSION postgis;
+
+SELECT * FROM spatial_ref_sys
+
+ALTER TABLE establishment
+ADD COLUMN establishment_local_id int
+
+
+
+ALTER TABLE establishment
+ADD CONSTRAINT fk_establishment_local_id FOREIGN KEY (establishment_local_id) REFERENCES place (local_id)
+
+CREATE TABLE place (
+
+	local_id serial primary key,
+	local_morada varchar(320),
+	ref_system_id int NOT NULL,
+	geometry_info_point geometry
+
+);
+
+ALTER TABLE place 
+ALTER COLUMN ref_system_id SET DEFAULT 4326
+
+ALTER TABLE place
+ADD CONSTRAINT fk_ref_system_id FOREIGN KEY (ref_system_id) REFERENCES spatial_ref_sys (srid)
+
+ALTER TABLE establishment
+ADD CONSTRAINT fk_establishment_local_id FOREIGN KEY (establishment_local_id) REFERENCES place (local_id)
 
 -------------------------- CODIGO JÁ FEITO ---------------------------------
 
