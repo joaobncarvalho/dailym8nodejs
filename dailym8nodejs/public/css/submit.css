@@ -18,7 +18,7 @@
   font-weight: 500;
   font-size: 28px;
   font-size: 1.75rem;
-  color: #589442;
+  color: #e8c711;
 }
 .box_about p {
   font-size: 15px;
@@ -119,7 +119,7 @@
 }
 
 .plan-tall .plan-title {
-  background-color: #589442;
+  background-color: #e8c711;
   border-bottom: none;
   color: #fff;
 }
@@ -171,7 +171,7 @@ ul.plan-features {
   margin-right: -5px;
   position: relative;
   z-index: 100;
-  border: solid #589442;
+  border: solid #e8c711;
   position: relative;
 }
 
@@ -180,7 +180,7 @@ ul.plan-features {
   width: 130px;
   line-height: 135px;
   font-size: 36px;
-  background: #589442;
+  background: #e8c711;
   -webkit-border-radius: 130px;
   -moz-border-radius: 130px;
   -ms-border-radius: 130px;
