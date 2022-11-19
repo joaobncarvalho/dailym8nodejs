@@ -1,34 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-   
-    <script src="javascripts/map.js"></script>
-    <link rel="stylesheet" href="./css/mainpage.css">
-    <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVH9zsDCTHoGTwNdw3tA6f1MtfW2s1n5Y&libraries=places,geometry&callback=initMap&v=weekly" async defer></script>
+<!-- PARA ESTE CASO, PARA OS GESTORES, ELES NÃO VERÃO O MAPA QUANDO ADICIONAREM UM LOCAL, SÓ VERÃO A MORADA QUE ADICIONARAM -->
 
-    
+<!--NESTE CASO, POR EXEMPLO, CASO FOREM CRIAR UM RESTAURANTE, FUNCIONARIA DA SEGUINTE FORMA (SENDO QUE TODOS OS DADOS SÃO INICIALMENTE PREENCHIDOS): -->
+
+<!-- 1. É FEITO O POST DOS DADOS SÓ DA TABELA DO RESTAURANTE, QUE CRIA AUTOMATICAMENTE UM RESTAURANTE E UM ESTABELECIMENTO
+
+     2. COM O ESTABELECIMENTO CRIADO É LOGO ADICIONADA A MORADA E JUNTAMENTE COM ELA (QUANDO O GESTOR A SELECIONA NA CRIAÇÃO DO RESTAURANTE), VÊM A LATITUDE E LONGITUDE, QUE SERÃO ENTÃO ADICIONADAS Á TABELA DE PLACE
+
+     3. A PARTIR DESSE MOMENTO TUDO ESTARÁ INSERIDO NA BASE DE DADOS. 
+
+     4. ASSIM, CASO O UTILIZADOR ABRA OS DETALHES DO RESTAURANTE OU OUTRO SERVIÇO, SÃO ENTÃO BUSCADOS OS DADOS DO MESMO E OS DADOS DA TABELA PLACE  (MORADA, LATITUDE E LONGITUDE)RELACIONADAS AQUELE ESTABELECIMENTO/SERVIÇO.
+
+     5. COM BASE NESSA LATITUDE E LONGITUDE, É ENTÃO POSICIONADO UM MARCADOR E É CALCULADO, QUANDO A PAGINA DE DETALHES É ABERTA, TENTA CALCULAR A POSIÇÃO ATUAL DO UTILIZADOR (LATITUDE E LONGITUDE)
+
+     6. POR FIM É CALCULADA A DISTANCIA EM km E É EXIBIDA JUNTAMENTE COM OS OUTROS DADOS
+
+-->
+
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapa Interativo</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!--ICONES PARA OS LOCAIS (DEPENDENDO DO TIPO DE LOCAL)-->
+  <link rel="stylesheet" href="./css/mainpage.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.bundle.min.js"></script>
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVH9zsDCTHoGTwNdw3tA6f1MtfW2s1n5Y&libraries=places,geometry&callback=initMap&v=weekly"
+    defer></script>
+
+  <!---
+    <script async
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVH9zsDCTHoGTwNdw3tA6f1MtfW2s1n5Y&libraries=places&callback=initMap">
+    </script> -->
+
+  <script src="./js/map.js"></script>
 
   <!--Ligar o codigo JavaScript a um ficheiro JavaScript-->
 
 </head>
 
-<nav>
-  <!--Barra de navegação-->
-  <div style="background-color: #1e1f1e;" class="topnav">
-    <a href="index.html">
-      <img src="./images/logobranconobg.png" class="img-fluid"
-        style="cursor: pointer; position: absolute; margin-left: -99%; width: 180px; margin-top: -1%; height: 65px;">
-    </a>
-    <a id="profilehide" style="display: none;" href="dashboardTemplate.html">Perfil</a>
-    <a href="jornalfit.html"> Jornal FIT</a>
-    <a href="mainpage.html">FitHub</a>
-  </div>
-</nav>
+
 
 <body>
 
@@ -39,21 +55,11 @@
 
   <!--PERGUNTAR COMO ATRIBUIR DIFERENTES DISTANCIAS SEM REPETIR CODIGO IGUAL DE CSS, EM QUE SÓ ALTERA A POSIÇÃO (POUPAR CÓDIGO)-->
 
-  <section class="filterplaces">
-    <button id="filterplacesbtn" onclick="filterplacescoffee()"><b>CAFÉS</b></button>
-
-    <button id="filterplacesbtn2" onclick="filterplacesbares()"><b>BARES</b></button>
-
-    <button href="mainpage.html" id="filterplacesbtn3" onclick="filterplacesrestaurantes()"><b>RESTAURANTES</b></button>
-
-    <button type="button" onclick="filterplacesginasios()" id="filterplacesbtn4"><b>GINÁSIOS</b></button>
-
-  </section>
 
 
   <div class="container">
 
-    <div id="mapa"
+    <div id="mapa" 
       style='width: 782px; height: 500px; border: 1px solid #e8bf5c; margin-left: 240px; margin-top: 70px;'>
 
 
@@ -66,19 +72,10 @@
 
     </div>
 
-    <!--A VISIBILIDADE DOS BOTÕES É ALTERADA QUANDO UMA ROTA É RENDERIZADA-->
-
-    <button value="DRIVING"
-      style="width: 12%; height: 5%; font-size: 14px; z-index: 1; position: absolute; margin-top: -15px; margin-left: 900px; visibility: hidden;"
-      id="driving"><b>DRIVING</b></button>
-
-    <button value="WALKING"
-      style="width: 13%; height: 5%; font-size: 14px; margin-left: 540px; position: absolute; z-index: 1; margin-top: -15px; margin-left: 980px; visibility: hidden;"
-      id="walking"><b>WALKING</b></button>
 
 
     <!--MAPA DO GOOGLE MAPS-->
-    <div id="map" style="width: 780px; height: 100%; position: absolute; margin-top: -500px; margin-left: 243px;">
+    <div id="map" style="width: 780px; height: 100%; position: absolute; margin-top: -500px; margin-left: 243px; visibility:hidden;">
 
 
 
@@ -101,53 +98,7 @@
 
   <!--- <p><iframe class="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3113.461309133146!2d-9.15462138472065!3d38.707216579600434!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd1934838cfa1033%3A0x36de966c91888246!2sIADE%20-%20Creative%20University!5e0!3m2!1spt-PT!2spt!4v1648256962661!5m2!1spt-PT!2spt" width="900" height="550" style="border:0; position: absolute; margin-left: 290px; margin-top: 50px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" ></iframe></p> -->
 
-  <section class="eventospublicos">
 
-    <div id="rectangletotitle6">
-      <h2 style="text-align: center; color: white; font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: 19px;">
-        <b>EVENTOS<br>RECENTES</b>
-      </h2>
-    </div>
-
-    <div id="organize99" style="margin-left: 1250px; margin-top: 150px; position:absolute; gap: 10px;">
-
-
-
-
-    </div>
-
-    <hr
-      style="background-color: #e8bf5c; transform: rotate(180deg); width: 170px; color: #e8bf5c; position: absolute; margin-left: 1257px; margin-top: 125px;">
-
-    <a href="eventos.html">
-      <button id="seemorebtn1"><b>VER MAIS</b></button>
-    </a>
-
-  </section>
-
-  <section class="eventospublicos">
-
-    <div id="rectangletotitle7">
-      <h2 style="text-align: center; color: white; font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: 19px;">
-        <b>AULAS<br>MARCADAS</b>
-      </h2>
-    </div>
-
-    <div id="organize109" style="margin-left: 50px; margin-top: 150px; position:absolute; gap: 10px;">
-
-
-
-
-    </div>
-
-    <hr
-      style="background-color: #e8bf5c; transform: rotate(180deg); width: 170px; color: #e8bf5c; position: absolute; margin-left: 57px; margin-top: 125px;">
-
-    <a href="eventosmarcados.html">
-      <button id="seemorebtn2"><b>VER MAIS</b></button>
-    </a>
-
-  </section>
 
   <script src='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js'></script>
 
@@ -358,5 +309,41 @@
 
   <!--<h4 style="color: white;">Username: <span id="usernameee"></span></h4>-->
 
+  <script>
+
+    var user_admin = sessionStorage.getItem("user_admin");
+
+    var user_pt = sessionStorage.getItem("user_pt");
+
+    var user_nutri = sessionStorage.getItem("user_nutri");
+
+    var user_id = sessionStorage.getItem("user_id");
+
+    if (user_pt == 1 && user_admin == 0 && user_nutri == 0) {
+
+
+      document.getElementById("profilehide").style.display = "inline";
+
+
+    } else if (user_pt == 0 && user_admin == 0 && user_nutri == 0) {
+
+      document.getElementById("profilehide").style.display = "inline";
+
+
+    } else if (user_pt == 0 && user_admin == 0 && user_nutri == 1) {
+
+      document.getElementById("profilehide").style.display = "inline";
+
+    } else if (user_admin == 1) {
+
+      document.getElementById("profilehide").style.display = "inline";
+
+    }
+
+
+
+  </script>
+
 </body>
+
 </html>
