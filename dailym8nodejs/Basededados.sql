@@ -57,7 +57,7 @@ CREATE TABLE utilizador (
    utilizador_name varchar(50) NOT NULL,
    utilizador_username varchar(40) NOT NULL,
    utilizador_email varchar(80),
-   utilizador_password varchar(40) NOT NULL,
+   utilizador_password varchar(1000) NOT NULL,
    utilizador_type_id int
 
 );
