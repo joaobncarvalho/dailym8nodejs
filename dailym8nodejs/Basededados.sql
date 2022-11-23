@@ -593,3 +593,171 @@ SELECT * FROM spot WHERE spot.spot_parking_lot_id = AND spot.spot_availability =
 
 
 ----- ELIMINAR UMA RESERVA (UPDATE/PUT Á INDISPONIBILIDADE DA ACOMODACAO DESRESERVADA) ----
+
+--------------------------------- NOVO CODIGO DE CRIACAO DE TABELAS DE PLACE ---------------------------------------------
+
+CREATE TABLE place_restaurante (
+
+  local_id serial primary key,
+  local_morada varchar(400),
+  ref_system_id int DEFAULT 4326,
+  geometry_info_point geometry,
+  local_restaurante_id int NOT NULL,
+  local_latitude real NOT NULL,
+  local_longitude real NOT NULL
+
+)
+
+INSERT INTO place_restaurante (local_morada, geometry_info_point, local_restaurante_id, local_latitude, local_longitude)
+VALUES ('Rua 38','POINT(37.2173 -12.28743)', 4, 37.2173, -12.28743)
+
+CREATE TABLE place_servico_acomodacoes (
+
+  local_id serial primary key,
+  local_morada varchar(400),
+  ref_system_id int DEFAULT 4326,
+  geometry_info_point geometry,
+  local_servico_acomodacoes_id int NOT NULL,
+  local_latitude real NOT NULL,
+  local_longitude real NOT NULL
+
+)
+
+CREATE TABLE place_estacionamento (
+
+  local_id serial primary key,
+  local_morada varchar(400),
+  ref_system_id int DEFAULT 4326,
+  geometry_info_point geometry,
+  local_estacionamento_id int NOT NULL,
+  local_latitude real NOT NULL,
+  local_longitude real NOT NULL
+
+)
+
+ALTER TABLE place_estacionamento
+ADD CONSTRAINT fk_local_estacionamento_id FOREIGN KEY (local_estacionamento_id) REFERENCES parking_lot (parking_lot_id)
+
+ALTER TABLE place_restaurante
+ADD CONSTRAINT fk_local_restaurante_id FOREIGN KEY (local_restaurante_id) REFERENCES restaurant (restaurant_id)
+
+ALTER TABLE place_servico_acomodacoes
+ADD CONSTRAINT fk_local_servico_acomodacoes_id FOREIGN KEY (local_servico_acomodacoes_id) REFERENCES equipment_service (equipment_service_id)
+
+CREATE TABLE report_restaurante (
+
+  report_id serial primary key,
+  report_restaurante_id int
+
+)
+
+ALTER TABLE report_restaurante 
+ADD CONSTRAINT fk_report_restaurante_id FOREIGN KEY (report_restaurante_id) REFERENCES restaurant (restaurant_id)
+
+CREATE TABLE report_estacionamento (
+
+  report_id serial primary key,
+  report_estacionamento_id int
+
+)
+
+ALTER TABLE report_estacionamento
+ADD CONSTRAINT fk_report_estacionamento_id FOREIGN KEY (report_estacionamento_id) REFERENCES parking_lot (parking_lot_id)
+
+CREATE TABLE report_servico_acomodacao (
+
+  report_id serial primary key,
+  report_servico_acomodacao_id int
+
+)
+
+ALTER TABLE report_servico_acomodacao
+ADD CONSTRAINT fk_report_servico_acomodacao_id FOREIGN KEY (report_servico_acomodacao_id) REFERENCES equipment_service (equipment_service_id)
+
+
+ALTER TABLE report_restaurante
+ADD COLUMN report_restaurante_date TIMESTAMP
+
+ALTER TABLE report_restaurante
+ALTER COLUMN report_restaurante_date SET DEFAULT now()
+-------------------------------------------- OBTER DETALHES DOS 250 PRIMEIROS REPORTS ---------------------------------------------------
+
+SELECT report_restaurante.report_id, report_restaurante.report_restaurante_id, report_restaurante.report_restaurante_date,restaurant.restaurant_id, restaurant.establishment_name, restaurant.type_service_identifier, restaurant.restaurante_number_tables, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name, establishment.establishment_id, establishment.establishment_utilizador_id, utilizador.utilizador_id, utilizador.utilizador_name, utilizador.utilizador_username FROM report_restaurante
+INNER JOIN restaurant ON restaurant.restaurant_id = report_restaurante.report_restaurante_id
+INNER JOIN type_restaurant ON type_restaurant.type_restaurant_id = restaurant.restaurant_type_id
+INNER JOIN establishment ON establishment.establishment_id = restaurant.establishment_id
+INNER JOIN utilizador ON utilizador.utilizador_id = establishment.establishment_utilizador_id
+ORDER BY report_restaurante.report_restaurante_date DESC
+
+-------------------------------------------------- APAGAR UM ESTABELECIMENTO (RESTAURANTE) | 2 PASSOS.
+
+--1. APAGAR TODOS OS REPORTS DO RESTAURANTE
+
+DELETE FROM report_restaurante WHERE report_restaurante.report_restaurante_id = x
+
+--2. APAGAR TODAS AS RESERVAS MARCADAS NO RESTAURANTE
+
+DELETE FROM reserva_restaurante WHERE reserva_restaurante.restaurante_identifier = x
+
+--3. APAGAR TODOS OS PRATOS DO RESTAURANTE
+
+DELETE FROM plate WHERE plate.plate_restaurant_id = x
+
+--4. APAGAR TODAS AS MESAS DO RESTAURANTE
+
+DELETE FROM mesa WHERE mesa.mesa_restaurant_id = x
+
+--3. APAGAR EM SI O RESTAURANTE
+
+DELETE FROM restaurant WHERE restaurant.restaurant_id = x
+
+
+-------------------------------------------------- APAGAR UM SERVIÇO DE TOLDOS (TOLDOS) | 2 PASSOS.
+
+--1. APAGAR TODOS OS REPORTS DO RESTAURANTE
+
+DELETE FROM report_servico_acomodacao WHERE report_servico_acomodacao.report_servico_acomodacao_id = x
+
+--2. APAGAR TODAS AS RESERVAS MARCADAS NO RESTAURANTE
+
+DELETE FROM reserva_servico_acomodacao WHERE reserva_servico_acomodacao.servico_acomodacao_identifier = x
+
+--3. APAGAR TODAS AS ACOMODACOES DO RESTAURANTE (APAGAR TAMBEM AS POSIÇÕES DE ACOMODACOES PERTENCENTES A UM SERVIÇO DE TOLDOS)
+
+
+
+DELETE FROM acomodacao WHERE acomodacao.acomodacao_equipment_service_id = x
+
+--3. APAGAR EM SI O RESTAURANTE
+
+DELETE FROM equipment_service WHERE equipment_service.equipment_service_id = x
+
+
+
+-------------------------------------------------- APAGAR UM ESTACIONAMENTO  | 2 PASSOS.
+
+--1. APAGAR TODOS OS REPORTS DO RESTAURANTE
+
+DELETE FROM report_parking_lot WHERE report_parking_lot.report_parking_lot_id = x
+
+--2. APAGAR TODAS AS RESERVAS MARCADAS NO RESTAURANTE
+
+DELETE FROM reserva_parking_lot WHERE reserva_parking_lot.parking_lot_identifier = x
+
+--3. APAGAR TODOS OS SPOTS DO RESTAURANTE
+
+DELETE FROM spot WHERE spot.spot_parking_lot_id = x
+
+
+--4. APAGAR EM SI O RESTAURANTE
+
+DELETE FROM parking_lot WHERE parking_lot.parking_lot_id = x
+
+--------------------------------------------------------------- APAGAR UMA CONTA -----------------------------------------------------
+
+DELETE FROM establishment WHERE establishment_utilizador_id = x
+
+DELETE FROM utilizador WHERE utilizador.utilizador_id = x
+
+
+

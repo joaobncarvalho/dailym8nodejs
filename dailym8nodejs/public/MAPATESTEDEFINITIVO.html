@@ -22,7 +22,10 @@
     //   types: ['(regions)'],
     //   componentRestrictions: {country: "IN"}
     // };
-    var options = {}
+    var options = {
+
+      componentRestrictions: {country: 'PT' }
+    }
 
     var autocomplete = new google.maps.places.Autocomplete(input, options);
 
