@@ -760,4 +760,179 @@ DELETE FROM establishment WHERE establishment_utilizador_id = x
 DELETE FROM utilizador WHERE utilizador.utilizador_id = x
 
 
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE TABLE reserva_mesa (
+
+  id_reservation serial primary key,
+  date_marcacao_reservation date NOT NULL DEFAULT CURRENT_DATE,
+  user_identifier_reservation int NOT NULL,
+  mesa_identifier_reservation int NOT NULL,
+  date_marcada_reservation TIMESTAMP NOT NULL
+
+);
+
+ALTER TABLE reserva_mesa
+ADD CONSTRAINT fk_user_identifier_reservation FOREIGN KEY (user_identifier_reservation) REFERENCES utilizador (utilizador_id)
+
+ALTER TABLE reserva_mesa
+ADD CONSTRAINT fk_mesa_identifier_reservation FOREIGN KEY (mesa_identifier_reservation) REFERENCES mesa (mesa_id)
+
+CREATE TABLE reserva_acomodacao (
+
+  id_reservation serial primary key,
+  date_marcacao_reservation date NOT NULL DEFAULT CURRENT_DATE,
+  user_identifier_reservation int NOT NULL,
+  acomodacao_identifier_reservation int NOT NULL,
+  date_marcada_reservation TIMESTAMP NOT NULL
+
+);
+
+ALTER TABLE reserva_acomodacao
+ADD CONSTRAINT fk_user_identifier_reservation FOREIGN KEY (user_identifier_reservation) REFERENCES utilizador (utilizador_id)
+
+ALTER TABLE reserva_acomodacao
+ADD CONSTRAINT fk_acomodacao_identifier_reservation FOREIGN KEY (acomodacao_identifier_reservation) REFERENCES acomodacao (acomodacao_id)
+
+CREATE TABLE reserva_spot (
+
+  id_reservation serial primary key,
+  date_marcacao_reservation date NOT NULL DEFAULT CURRENT_DATE,
+  user_identifier_reservation int NOT NULL,
+  spot_identifier_reservation int NOT NULL,
+  date_marcada_reservation TIMESTAMP NOT NULL
+
+);
+
+ALTER TABLE reserva_spot
+ADD CONSTRAINT fk_user_identifier_reservation FOREIGN KEY (user_identifier_reservation) REFERENCES utilizador (utilizador_id)
+
+ALTER TABLE reserva_spot
+ADD CONSTRAINT fk_spot_identifier_reservation FOREIGN KEY (spot_identifier_reservation) REFERENCES spot (spot_id)
+------------------------------------------
+
+ALTER TABLE reserva_mesa 
+ADD COLUMN payment_credit_card_number varchar(400) UNIQUE NOT NULL
+
+ALTER TABLE reserva_mesa 
+ADD COLUMN payment_cvc_number varchar(400) NOT NULL
+
+ALTER TABLE reserva_acomodacao
+ADD COLUMN payment_credit_card_number varchar(400) UNIQUE NOT NULL
+
+ALTER TABLE reserva_acomodacao 
+ADD COLUMN payment_cvc_number varchar(400) NOT NULL
+
+ALTER TABLE reserva_spot
+ADD COLUMN payment_credit_card_number varchar(400) UNIQUE NOT NULL
+
+ALTER TABLE reserva_spot
+ADD COLUMN payment_cvc_number varchar(400) NOT NULL
+
+
+---------------------------------- SQL PARA LIKES ------------------------------------
+
+CREATE TABLE like_restaurante (
+
+   like_id serial primary key,
+   like_utilizador int NOT NULL,
+   like_restaurante int NOT NULL
+
+)
+
+ALTER TABLE like_restaurante
+ADD CONSTRAINT fk_like_utilizador FOREIGN KEY (like_utilizador) REFERENCES utilizador (utilizador_id)
+
+ALTER TABLE like_restaurante
+ADD CONSTRAINT fk_like_restaurante FOREIGN KEY (like_restaurante) REFERENCES restaurant (restaurant_id)
+
+CREATE TABLE like_servico_acomodacao (
+
+   like_id serial primary key,
+   like_utilizador int NOT NULL,
+   like_servico_acomodacao int NOT NULL
+
+)
+
+ALTER TABLE like_servico_acomodacao
+ADD CONSTRAINT fk_like_utilizador FOREIGN KEY (like_utilizador) REFERENCES utilizador (utilizador_id)
+
+ALTER TABLE like_servico_acomodacao
+ADD CONSTRAINT fk_like_servico_acomodacao FOREIGN KEY (like_servico_acomodacao) REFERENCES equipment_service (equipment_service_id)
+
+CREATE TABLE like_estacionamento (
+
+   like_id serial primary key,
+   like_utilizador int NOT NULL,
+   like_estacionamento int NOT NULL
+
+)
+
+ALTER TABLE like_estacionamento
+ADD CONSTRAINT fk_like_utilizador FOREIGN KEY (like_utilizador) REFERENCES utilizador (utilizador_id)
+
+ALTER TABLE like_estacionamento
+ADD CONSTRAINT fk_like_estacionamento FOREIGN KEY (like_estacionamento) REFERENCES parking_lot (parking_lot_id)
+
+
+----------------- COMO SABEMOS SE UM LIKE JÁ ESTÁ TOMADO ? SELECT ANTES DE DECIDIR QUE BOTÃO APARECERÁ PARA REMOVER OU DEIXAR LIKE -----------------
+
+----- PRIMEIRO FAZ-SE O SELECT PARA VERIFICAR, SE EXISTIR, SO PERMITE A REMOÇÃO, CASO CONTRARIO PERMITE SOMENTE A ADIÇÃO -------------------------
+
+SELECT * FROM like_restaurante WHERE like_restaurante.like_utilizador = x AND like_restaurante.like_restaurante = x
+
+---------- SE RETORNAR ALGUMA COISA, SIGNIFICA QUE O LIKE JÁ EXISTE, SÓ POSSIBILITANDO A SUA REMOÇÃO
+
+DELETE FROM like_restaurante WHERE like_restaurante.like_utilizador = x AND like_restaurante.like_restaurante = x
+
+-- CASO NÃO HAJA, FAZ UM INSERT NORMAL NA TABELA --
+
+INSERT INTO like_restaurante (campos da tabela) VALUES (campos)
+
+------- PARA DEPOIS DECIDIR O INSERT DOS LIKES (EM QUE TABELA), USAREMOS O TYPE_IDENTIFIER DO LOCAL (QUE PODE SER 1 (RESTAURANTE), 2 (ACOMODACAO) E 3 (ESTACIONAMENTO)) -----------
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE TABLE pack_restaurante (
+
+   pack_id serial primary key,
+   pack_restaurante_id int,
+   pack_availability bit DEFAULT '0'
+	
+)
+
+ALTER TABLE pack_restaurante 
+ADD CONSTRAINT fk_pack_restaurante_id FOREIGN KEY (pack_restaurante_id) REFERENCES restaurant(restaurant_id)
+
+CREATE TABLE pack_servico_acomodacao (
+
+   pack_id serial primary key,
+   pack_servico_acomodacao_id int,
+   pack_availability bit DEFAULT '0'
+	
+)
+
+ALTER TABLE pack_servico_acomodacao
+ADD CONSTRAINT fk_pack_servico_acomodacao_id FOREIGN KEY (pack_servico_acomodacao_id) REFERENCES equipment_service(equipment_service_id)
+
+CREATE TABLE pack_estacionamento (
+
+   pack_id serial primary key,
+   pack_estacionamento_id int,
+   pack_availability bit DEFAULT '0'
+	
+)
+
+ALTER TABLE pack_estacionamento
+ADD CONSTRAINT fk_pack_estacionamento_id FOREIGN KEY (pack_estacionamento_id) REFERENCES parking_lot(parking_lot_id)
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+--- TERMINAR ---
+CREATE TABLE item_
+
 
