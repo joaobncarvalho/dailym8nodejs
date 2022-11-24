@@ -932,7 +932,7 @@ ADD CONSTRAINT fk_pack_estacionamento_id FOREIGN KEY (pack_estacionamento_id) RE
 
 --------------------------------------------------------------------------------------------------------------------------------------
 
---- TERMINAR ---
+--- TERMINAR ESTA PARTE DA BASE DE DADOS ---
 CREATE TABLE item_
 
 
