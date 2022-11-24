@@ -227,12 +227,12 @@ module.exports.saveRestaurante = async function(restaurante) {
         let sql =
             "INSERT " +
             "INTO restaurant " +
-            "(establishment_name, establishment_description, restaurant_type_id, restaurante_number_tables, establishment_utilizador_id) " +
+            "(establishment_name, establishment_description, restaurant_type_id, restaurante_number_tables) " +
             "VALUES ($1, $2, $3, $4) " +
             "RETURNING restaurant_id";
 
             //console.log(user.user_name + "|" + user.user_password + "|" + user.user_morada + "|" + user.user_email + "|" + user.user_points + "|" + user.user_admin + "|" + user.user_pt + "|" + user.user_nutri);
-        let result = await pool.query(sql, [restaurante.establishment_name, restaurante.establishment_description, restaurante.restaurant_type_id, restaurante.restaurante_number_tables, restaurante.establishment_utilizador_id]);
+        let result = await pool.query(sql, [restaurante.establishment_name, restaurante.establishment_description, restaurante.restaurant_type_id, restaurante.restaurante_number_tables]);
         
         return { status: 200, result: result };
     } catch (err) {
@@ -422,6 +422,20 @@ module.exports.getToldoServiceAcomodacoesFilter = async function(est_id, line_va
 
 //OBTER DETALHES DE UM SERVIÇO DE RESTAURANTE PARA A RESERVA
 module.exports.getRestaurantDetailsForReserva = async function(est_id) {
+    try {
+        let sql = "SELECT restaurant.establishment_id, restaurant.restaurant_id ,restaurant.establishment_name, restaurant.restaurant_type_id, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name FROM restaurant " + "INNER JOIN type_restaurant ON type_restaurant.type_restaurant_id = restaurant.restaurant_type_id " + "WHERE restaurant.establishment_id = " + est_id;
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+
+module.exports.getRestaurantSingle = async function(est_id) {
     try {
         let sql = "SELECT restaurant.establishment_id, restaurant.restaurant_id ,restaurant.establishment_name, restaurant.restaurant_type_id, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name FROM restaurant " + "INNER JOIN type_restaurant ON type_restaurant.type_restaurant_id = restaurant.restaurant_type_id " + "WHERE restaurant.establishment_id = " + est_id;
         let result = await pool.query(sql);
@@ -816,169 +830,4 @@ module.exports.getParkingLots = async function(rest_id) {
         return { status: 500, data: err };
     }
 }
-
-//////ADICIONAR UM ENDEREÇO PARA UM LOCAL (APOS A CRIACAO, VISTO QUE NÃO É UM REQUISITO OBRIGATÓRIO)
-
-module.exports.saveEstacionamentoPlace = async function(local_estacionamento) {
-
-    try {
-
-        let sql =
-            "INSERT " +
-            "INTO place_estacionamento " +
-            "(local_morada, geometry_info_point, local_estacionamento_id, local_latitude, local_longitude)" 
-            "VALUES ($1, $2, $3, $4, $5) " +
-            "RETURNING local_id";
-
-            //console.log(user.user_name + "|" + user.user_password + "|" + user.user_morada + "|" + user.user_email + "|" + user.user_points + "|" + user.user_admin + "|" + user.user_pt + "|" + user.user_nutri);
-        let result = await pool.query(sql, [local_estacionamento.local_morada, local_estacionamento.geometry_info_point, local_estacionamento.local_estacionamento_id, local_estacionamento.local_latitude, local_estacionamento.local_longitude]);
-        
-        return { status: 200, result: result };
-    } catch (err) {
-
-        console.log(err);
-        return { status: 500, result: err };
-    }
-}
-
-module.exports.saveRestaurantePlace = async function(local_restaurante) {
-
-    try {
-
-        let sql =
-            "INSERT " +
-            "INTO place_restaurante " +
-            "(local_morada, geometry_info_point, local_restaurante_id, local_latitude, local_longitude)" 
-            "VALUES ($1, $2, $3, $4, $5) " +
-            "RETURNING local_id";
-
-            //console.log(user.user_name + "|" + user.user_password + "|" + user.user_morada + "|" + user.user_email + "|" + user.user_points + "|" + user.user_admin + "|" + user.user_pt + "|" + user.user_nutri);
-        let result = await pool.query(sql, [local_restaurante.local_morada, local_restaurante.geometry_info_point, local_restaurante.local_restaurante_id, local_restaurante.local_latitude, local_restaurante.local_longitude]);
-        
-        return { status: 200, result: result };
-    } catch (err) {
-
-        console.log(err);
-        return { status: 500, result: err };
-    }
-}
-
-module.exports.saveServicoAcomodacoesPlace = async function(local_servico_acomodacao) {
-
-    try {
-
-        let sql =
-            "INSERT " +
-            "INTO place_servico_acomodacoes " +
-            "(local_morada, geometry_info_point, local_servico_acomodacoes_id, local_latitude, local_longitude)" 
-            "VALUES ($1, $2, $3, $4, $5) " +
-            "RETURNING local_id";
-
-            //console.log(user.user_name + "|" + user.user_password + "|" + user.user_morada + "|" + user.user_email + "|" + user.user_points + "|" + user.user_admin + "|" + user.user_pt + "|" + user.user_nutri);
-        let result = await pool.query(sql, [local_servico_acomodacao.local_morada, local_servico_acomodacao.geometry_info_point, local_servico_acomodacao.local_servico_acomodacoes_id, local_servico_acomodacao.local_latitude, local_servico_acomodacao.local_longitude]);
-        
-        return { status: 200, result: result };
-    } catch (err) {
-
-        console.log(err);
-        return { status: 500, result: err };
-    }
-}
-
-
-////// ADICIONAR UM REPORT A UM RESTAURANTE
-
-module.exports.saveReportRestaurante = async function(report_restaurante) {
-
-    try {
-
-        let sql =
-            "INSERT " +
-            "INTO report_restaurante " +
-            "(report_restaurante_id)" 
-            "VALUES ($1) " +
-            "RETURNING report_id";
-
-            //console.log(user.user_name + "|" + user.user_password + "|" + user.user_morada + "|" + user.user_email + "|" + user.user_points + "|" + user.user_admin + "|" + user.user_pt + "|" + user.user_nutri);
-        let result = await pool.query(sql, [report_restaurante.report_restaurante_id]);
-        
-        return { status: 200, result: result };
-    } catch (err) {
-
-        console.log(err);
-        return { status: 500, result: err };
-    }
-}
-
-
-////// ADICIONAR REPORT A UM ESTACIONAMENTO
-
-module.exports.saveReportEstacionamento = async function(report_restaurante) {
-
-    try {
-
-        let sql =
-            "INSERT " +
-            "INTO report_estacionamento " +
-            "(report_estacionamento_id)" 
-            "VALUES ($1) " +
-            "RETURNING report_id";
-
-            //console.log(user.user_name + "|" + user.user_password + "|" + user.user_morada + "|" + user.user_email + "|" + user.user_points + "|" + user.user_admin + "|" + user.user_pt + "|" + user.user_nutri);
-        let result = await pool.query(sql, [report_restaurante.report_estacionamento_id]);
-        
-        return { status: 200, result: result };
-    } catch (err) {
-
-        console.log(err);
-        return { status: 500, result: err };
-    }
-}
-
-
-////// ADICIONAR REPORT A UM SERVIÇO
-
-module.exports.saveReportServicoAcomodacao = async function(report_servico_acomodacao) {
-
-    try {
-
-        let sql =
-            "INSERT " +
-            "INTO report_servico_acomodacao " +
-            "(report_servico_acomodacao_id)" 
-            "VALUES ($1) " +
-            "RETURNING report_id";
-
-            //console.log(user.user_name + "|" + user.user_password + "|" + user.user_morada + "|" + user.user_email + "|" + user.user_points + "|" + user.user_admin + "|" + user.user_pt + "|" + user.user_nutri);
-        let result = await pool.query(sql, [report_servico_acomodacao.report_servico_acomodacao_id]);
-        
-        return { status: 200, result: result };
-    } catch (err) {
-
-        console.log(err);
-        return { status: 500, result: err };
-    }
-}
-
-////// OBTER OS 25O PRIMEIROS REPORTS (PODEM SER DOS MESMOS ESTABELECIMENTOS) | QUANDO UM REPORT É CLICADO, SURGE INFORMAÇÕES DO LOCAL EM QUE FOI FEITO O REPORT, JUNTAMENTE COM O NUMERO DE REPORTS QUE TEM ATUALMENTE E A POSSIBILIDADE DE ELIMINAR. POSSIVELMENTE TAMBÉM TERÁ O CRIADOR DESSE ESTABELECIMENTO E A POSSIBILIDADE DE ELIMINAR A CONTA.
-
-
-
-
-////// PUBLICAR UM ESTABELECIMENTO - AO PUBLICAR, É NECESSÁRIO MODERAR QUE ESTABELECIMENTOS SÃO CRIADOS, EVITANDO SITUAÇÕES MENOS FAVORÁVEIS //////
-
-///// A MODERAÇÃO OCORRE ATRAVÉS DE UM SISTEMA DE REPORTS /////
-
-///// OS ESTABELECIMENTOS SÃO ENTÃO EXIBIDOS NUM MINI-DASHBOARD DO UTILIZADOR, ONDE PODEM APAGAR ESSES MESMOS ESTABELECIMENTOS, E COM ISSO, A SUA LOCALIZAÇÃO, ETC. /////
-
-
-
-///// UM UTILIZADOR TAMBÉM PODE TER REPORTS, AINDA QUE INDIRETAMENTE PELA QUANTIDADE DE REPORTS AO SEU ESTABELECIMENTO /////
-
-//// NA TABELA DE REPORTS SÓ É GUARDADO O REPORT, E NÃO QUEM O FEZ, MANTENDO PRIVACIDADE ////
-
-
-
-
-
 

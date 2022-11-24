@@ -1,40 +1,50 @@
 function goInfo(id) {
-    localStorage.setItem("imo_id", id)
-    window.location.href = "./blog-single.html"
+    localStorage.setItem("establishment_id", id)
+    window.location.href = "./detail-restaurant-2.html"
 }
 
 
 
 $(document).ready(
 
-    function imo(){
+    function restaurantsrandom(){
 
         $.ajax({
-            url: "https://imodream-api.herokuapp.com/api/imo/",
+            url: "https://dailym8nodeproj.fly.dev/api/showrandomrestaurants/",
             type: "GET",
             dataType: 'json',
             success: function(result) {
 
                 console.log("="+result);
-                $('#DimensionPro').text(result)
-                let teste = document.querySelector("#imo")
+                $('#Restaurantes').text(result)
+                let teste = document.querySelector("#randomtest")
                 let html = ""
 
                 for (let i in result) {
-                    let h2 = result[i].Dimension + " - " + result[i].Measurments
+                    let h2 = result[i].establishment_name + " - " + result[i].restaurant_type_id
                     html += ` 
-                        <figure class="aa-blog-img">
-                          <a href="#"><img alt="img" src="img/Imo/LogoCommon.jpeg"></a>
-                          <span class="aa-date-tag">${result[i].Criacao}</span>
-                        </figure>
-                        
-                          <h3><a onclick="goInfo(${result[i].ImoId})">${result[i].Name}</a></h3>
-                          <p>Agencia Imobiliaria.</p>
-                          <div class="aa-blog-single-bottom">
-                            <a class="aa-blog-author" href="#"><i class="fa fa-user"></i> ${result[i].Name}</a>
-                          </div>
-                        </div>                   
-                      </article>`
+                    <div class="item">
+                    
+                        <div class="strip">
+			                <figure>
+			                    <span class="ribbon off">-30%</span>
+			                    <img src="img/lazy-placeholder.png" data-src="img/location_1.jpg" class="owl-lazy" alt="">
+			                    <a onclick="goInfo(${result[i].establishment_id})" class="strip_info">
+			                        <small>${result[i].type_restaurant_name}</small>
+			                        <div class="item_title">
+			                        <h3>${result[i].establishment_name}</h3>
+			                        <small>27 Old Gloucester St</small>
+			                        </div>
+			                    </a>
+			                </figure>
+			                <ul>
+			                    <li><span class="loc_open">Now Open</span></li>
+			                    <li>
+			                        <div class="score"><span>Superb<em>350 Reviews</em></span><strong>8.9</strong></div>
+			                    </li>
+			                </ul>
+			            </div>
+                    </div>`
                 }
                 console.log("aaaaa"+html)
                 teste.innerHTML=html
@@ -44,3 +54,10 @@ $(document).ready(
         });
     }
 );
+
+
+
+
+
+
+

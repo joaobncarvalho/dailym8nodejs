@@ -82,6 +82,15 @@ router.get('/restaurante/menu/seeplates/:idestabelecimento', async function(req,
 
 });
 
+router.get('/restaurante/:idestabelecimento', async function(req, res, next) {
+
+  let estabelecimento_id = req.params.idestabelecimento;
+
+  let result = await usersModel.getRestaurantSingle(estabelecimento_id);
+  res.status(result.status).send(result.data);
+
+});
+
 // FILTRAR PRATOS DE UM RESTAURANTE PELO TIPO
 
 router.get('/restaurante/menu/seeplates/filter/:idestabelecimento/:idplatetype', async function(req, res, next) {
