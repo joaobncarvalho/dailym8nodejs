@@ -135,6 +135,16 @@ var salt = 10;
 //////////////////////// EXTRA PARA O UTILIZADOR -> CANCELAR A SUA PROPRIA RESERVA /////////////////////////////
 
 
+/////////////////////////////////// MÉTODOS DE ADMINISTRADOR //////////////////////////////////////////
+
+/// VER REPORTS
+
+/// APAGAR REPORTS
+
+/// APAGAR ESTABELECIMENTO (ALEM DO PROPRIO GESTOR)
+
+/// APAGAR CONTAS (ALEM DOS PROPRIOS UTILIZADORES)
+
 
 
 
