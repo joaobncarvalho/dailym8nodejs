@@ -154,6 +154,20 @@ var salt = 10;
 
 /// APAGAR CONTAS (ALEM DOS PROPRIOS UTILIZADORES)
 
+
+module.exports.DeleteReportFromRestaurant = async function(rest_id) {
+    try {
+        let sql = "DELETE FROM report_restaurante WHERE report_restaurante_id = " + rest_id;
+        let result = await pool.query(sql);
+        let userfound = result.rows;
+        console.log("[usersModel.getUserDados] dados_utilizador = " + JSON.stringify(userfound));
+        return { status: 200, data: userfound };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
 module.exports.getAcomodacaoPositionFilter = async function(servico_acomodacao_id, line_value) { 
     try {
         let sql = "SELECT *, acomodacao_type.acomodacao_type_id, acomodacao_type.acomodacao_type_name ,equipment_service.establishment_id, equipment_service.establishment_name, position_acomodacao.position_acomodacao_id, position_acomodacao.position_line, position_acomodacao.position_column, position_acomodacao.acomodacao_identifier FROM acomodacao INNER JOIN acomodacao_type ON acomodacao_type.acomodacao_type_id = acomodacao.acomodacao_type_id INNER JOIN equipment_service ON equipment_service.equipment_service_id = acomodacao.acomodacao_equipment_service_id INNER JOIN position_acomodacao ON position_acomodacao.acomodacao_identifier = acomodacao.acomodacao_id WHERE equipment_service.equipment_service_id = " + servico_acomodacao_id + " AND position_acomodacao.position_line = " + line_value;

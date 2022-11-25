@@ -952,6 +952,19 @@ SELECT *, utilizador.utilizador_id, utilizador.utilizador_name, utilizador.utili
 LIMIT 250
 
 --------------------------------------------------------------------------------------------------------------------------------------
+-- APAGAR RESTAURANTE
+
+DELETE FROM report_restaurante WHERE report_restaurante_id = 
+
+DELETE FROM reserva_mesa WHERE reserva.
+
+DELETE FROM mesa WHERE mesa_restaurant_id =
+
+DELETE FROM plate WHERE plate_restaurant_id =
+
+
+
+------------------------------------------------------------------------------
 
 --- TERMINAR ESTA PARTE DA BASE DE DADOS ----
 CREATE TABLE item_
