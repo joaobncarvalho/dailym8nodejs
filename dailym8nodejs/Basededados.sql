@@ -680,6 +680,18 @@ ADD COLUMN report_restaurante_date TIMESTAMP
 
 ALTER TABLE report_restaurante
 ALTER COLUMN report_restaurante_date SET DEFAULT now()
+
+ALTER TABLE report_servico_acomodacao
+ADD COLUMN report_servico_acomodacao_date TIMESTAMP
+
+ALTER TABLE report_servico_acomodacao
+ALTER COLUMN report_servico_acomodacao_date SET DEFAULT now()
+
+ALTER TABLE report_estacionamento
+ADD COLUMN report_estacionamento_date TIMESTAMP
+
+ALTER TABLE report_estacionamento
+ALTER COLUMN report_estacionamento_date SET DEFAULT now()
 -------------------------------------------- OBTER DETALHES DOS 250 PRIMEIROS REPORTS ---------------------------------------------------
 
 SELECT report_restaurante.report_id, report_restaurante.report_restaurante_id, report_restaurante.report_restaurante_date,restaurant.restaurant_id, restaurant.establishment_name, restaurant.type_service_identifier, restaurant.restaurante_number_tables, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name, establishment.establishment_id, establishment.establishment_utilizador_id, utilizador.utilizador_id, utilizador.utilizador_name, utilizador.utilizador_username FROM report_restaurante
@@ -928,7 +940,16 @@ CREATE TABLE pack_estacionamento (
 
 ALTER TABLE pack_estacionamento
 ADD CONSTRAINT fk_pack_estacionamento_id FOREIGN KEY (pack_estacionamento_id) REFERENCES parking_lot(parking_lot_id)
+---------------------------------------------------------------------------------------------------------------------------------------
 
+SELECT *, utilizador.utilizador_id, utilizador.utilizador_name, utilizador.utilizador_username, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name FROM restaurant INNER JOIN utilizador ON utilizador.utilizador_id = restaurant.establishment_utilizador_id INNER JOIN type_restaurant ON type_restaurant.type_restaurant_id = restaurant.restaurant_type_id ORDER BY random()
+LIMIT 250
+
+SELECT *, utilizador.utilizador_id, utilizador.utilizador_name, utilizador.utilizador_username FROM equipment_service INNER JOIN utilizador ON utilizador.utilizador_id = equipment_service.establishment_utilizador_id  ORDER BY random()
+LIMIT 250
+
+SELECT *, utilizador.utilizador_id, utilizador.utilizador_name, utilizador.utilizador_username FROM parking_lot INNER JOIN utilizador ON utilizador.utilizador_id = parking_lot.establishment_utilizador_id  ORDER BY random()
+LIMIT 250
 
 --------------------------------------------------------------------------------------------------------------------------------------
 

@@ -198,10 +198,10 @@ router.post('/insertnewestacionamento', async function(req, res, next) {
   res.status(result.status).send(result.result);
 });
 
-router.post('/insertnewlike', async function(req, res, next) {
+router.post('/insertnewlikerestaurante', async function(req, res, next) {
   let newLike = req.body;
   //console.log("[usersRoutes] Saving user " + JSON.stringify(newUser));
-  let result = await usersModel.saveLike(newLike);
+  let result = await usersModel.saveLikeRestaurante(newLike);
   res.status(result.status).send(result.result);
 });
 

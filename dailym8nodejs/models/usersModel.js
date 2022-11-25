@@ -8,37 +8,46 @@ var salt = 10;
 
 /////////////////// LISTA DE MÉTODOS ////////////////////
 
-// REGISTO DO UTILIZADOR (CLIENTE E GESTOR)
+// REGISTO DO UTILIZADOR (CLIENTE E GESTOR) --- FEITO 
 
-// LOGIN DO UTILIZADOR
+// LOGIN DO UTILIZADOR --- FEITO
 
-//ALTERAR TIPO DE UTILIZADOR
+//ALTERAR TIPO DE UTILIZADOR --- FEITO
 
-// OBTER OS DETALHES DE UM UTILIZADOR (INFORMAÇÕES DA CONTA E ESTABELECIMENTOS QUE TEM E OS QUE GOSTA (SE FOR DO TIPO GESTOR))
+// OBTER OS DETALHES DE UM UTILIZADOR (INFORMAÇÕES DA CONTA E ESTABELECIMENTOS QUE TEM E OS QUE GOSTA (SE FOR DO TIPO GESTOR)) -- FEITO
 
-// OBTER RESTAURANTES ALEATORIOS PARA SUGESTÕES (EXIBINDO ALGUMA INFO)
 
-// OBTER SERVIÇOS DE ESTACIONAMENTO PARA SUGESTÕES (EXIBINDO ALGUMA INFO)
+// OBTER 250 RESTAURANTES ALEATORIOS JUNTO COM INFORMAÇÕES -- FEITO
 
-// OBTER SERVIÇOS DE ACOMODACOES DE PRAIA PARA SUGESTÕES (EXIBINDO ALGUMA INFO)
+// OBTER 250 SERVIÇOS DE ACOMODACOES JUNTO COM INFORMACOES -- FEITO
 
-// OBTER 250 RESTAURANTES ALEATORIOS JUNTO COM INFORMAÇÕES
+// OBTER 250 ESTACIONAMENTOS DE ACOMODACOES JUNTO COM INFORMAÇÕES -- FEITO
 
-// OBTER 250 SERVIÇOS DE ACOMODACOES JUNTO COM INFORMACOES
+//FILTRAR MESAS DISPONIVEIS POR INTERIOR/EXTERIOR -- FEITO
 
-// OBTER 250 ESTACIONAMENTOS DE ACOMODACOES JUNTO COM INFORMAÇÕES
+//FILTRAR MESAS POR DISPONIVEIS/INDISPONIVEIS -- FEITO
 
-// VERIFICAR SE UM UTILIZADOR POSSUI LIKE NUM RESTAURANTE (REPETE-SE PARA SERVIÇOS DE ACOMODAÇÃO E ESTACIONAMENTO)
+//ORDENAR MESAS/ACOMODACOES/LUGARES DISPONIVEIS PELO PREÇO (ASCENDENTE E DESCENDENTE) ?
 
-// DEIXAR UM LIKE NUM SERVIÇO 
+//FILTRAR ACOMODACOES POR DISPONIVEIS/INDISPONIVEIS -- FEITO
 
-// REMOVER UM LIKE DE UM SERVIÇO
+//FILTRAR LUGARES POR DISPONIVEIS/INDISPONIVEIS -- FEITO
 
-// DAR REPORT A UM SERVIÇO
+//FILTRAR ACOMODACOES (PALHOTAS/TOLDOS) -- FEITO
 
-// OBTER DETALHES DE UM SERVIÇO (RESTAURANTE/ACOMODACAO/ESTACIONAMENTO | INCLUI VER PACKS DISPONIVEIS DO SERVIÇO E QUEM O CRIOU)
+//FILTRAR ACOMODACOES (POR LINHA) -- FEITO
 
-// OBTER OS ULTIMOS 300 REPORTS DA PLATAFORMA (ADMINISTRADORES - DEVE POSSUIR DETALHES DO NOME DO ESTABELECIMENTO, ENTRE OUTRAS INFORMAÇÕES, INCLUSIVE O )
+// VERIFICAR SE UM UTILIZADOR POSSUI LIKE NUM RESTAURANTE (REPETE-SE PARA SERVIÇOS DE ACOMODAÇÃO E ESTACIONAMENTO)  -- FEITO
+
+// DEIXAR UM LIKE NUM SERVIÇO - FEITO
+
+// REMOVER UM LIKE DE UM SERVIÇO -- FEITO
+
+// DAR REPORT A UM SERVIÇO -- FEITO
+
+// OBTER DETALHES DE UM SERVIÇO (RESTAURANTE/ACOMODACAO/ESTACIONAMENTO | INCLUI VER PACKS DISPONIVEIS DO SERVIÇO E QUEM O CRIOU) --- FAZER AMANHÃ
+
+// OBTER OS ULTIMOS 300 REPORTS DA PLATAFORMA (ADMINISTRADORES - DEVE POSSUIR DETALHES DO NOME DO ESTABELECIMENTO, ENTRE OUTRAS INFORMAÇÕES, INCLUSIVE A CONTA QUE DETEM O ESTABELECIMENTO E A CONTAGEM DE QUANTOS REPORTS TEM O ESTABELECIMENTO (A CONTAGEM DE REPORTS É FEITA AO SER CLICADO UM DETERMINADO REPORT !!!)) -- 90% FEITO
 
 // ELIMINAR ESTABELECIMENTO (RESTAURANTE/ACOMODACAO/ESTACIONAMENTO - QUER SEJA POR UM ADMIN NO SISTEMA DE REPORTS, OU PELO PROPRIO GESTOR NA SUA PAGINA DE DETALHES DO ESTABELECIMENTO)
 
@@ -145,8 +154,180 @@ var salt = 10;
 
 /// APAGAR CONTAS (ALEM DOS PROPRIOS UTILIZADORES)
 
+module.exports.getAcomodacaoPositionFilter = async function(servico_acomodacao_id, line_value) { 
+    try {
+        let sql = "SELECT *, acomodacao_type.acomodacao_type_id, acomodacao_type.acomodacao_type_name ,equipment_service.establishment_id, equipment_service.establishment_name, position_acomodacao.position_acomodacao_id, position_acomodacao.position_line, position_acomodacao.position_column, position_acomodacao.acomodacao_identifier FROM acomodacao INNER JOIN acomodacao_type ON acomodacao_type.acomodacao_type_id = acomodacao.acomodacao_type_id INNER JOIN equipment_service ON equipment_service.equipment_service_id = acomodacao.acomodacao_equipment_service_id INNER JOIN position_acomodacao ON position_acomodacao.acomodacao_identifier = acomodacao.acomodacao_id WHERE equipment_service.equipment_service_id = " + servico_acomodacao_id + " AND position_acomodacao.position_line = " + line_value;
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.getMesaAvailabilityFilter = async function(rest_id, availability_state) { 
+    try {
+        let sql = "SELECT *, mesa_type.mesa_type_id, mesa_type.mesa_type_name ,restaurant.establishment_id, restaurant.establishment_name, restaurant.restaurant_id, restaurant.restaurante_number_tables, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name FROM mesa INNER JOIN mesa_type ON mesa_type.mesa_type_id = mesa.mesa_type_id INNER JOIN restaurant ON restaurant.restaurant_id = mesa.mesa_restaurant_id INNER JOIN type_restaurant ON type_restaurant.type_restaurant_id = restaurant.restaurant_type_id WHERE restaurant.restaurant_id = " + rest_id + " AND mesa.mesa_availability = '" + availability_state + "'";
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.getAcomodacaoAvailabilityFilter = async function(servico_acomodacao_id, availability_state) { 
+    try {
+        let sql = "SELECT *, acomodacao_type.acomodacao_type_id, acomodacao_type.acomodacao_type_name, equipment_service.establishment_id, equipment_service.establishment_name, equipment_service.equipment_service_id, equipment_service.number_acomodacoes FROM acomodacao INNER JOIN acomodacao_type ON acomodacao_type.acomodacao_type_id = acomodacao.acomodacao_type_id INNER JOIN equipment_service ON equipment_service.equipment_service_id = acomodacao.acomodacao_equipment_service_id WHERE equipment_service.equipment_service_id =  " + servico_acomodacao_id + " AND acomodacao.acomodacao_availability = '" + availability_state + "'";
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
 
 
+module.exports.getLugarAvailabilityFilter = async function(parking_lot_id, availability_state) { 
+    try {
+        let sql = "SELECT *, parking_lot.establishment_id, parking_lot.establishment_name, parking_lot.parking_lot_id, parking_lot.parking_lot_number_spots FROM spot INNER JOIN parking_lot ON parking_lot.parking_lot_id = spot.spot_parking_lot_id WHERE parking_lot.parking_lot_id = " + parking_lot_id + " AND spot.spot_availability = '" + availability_state + "'";
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.getAcomodacaoTypeFilter = async function(servico_acomodacao_id, type_id) { 
+    try {
+        let sql = "SELECT *, acomodacao_type.acomodacao_type_id, acomodacao_type.acomodacao_type_name, equipment_service.establishment_id, equipment_service.establishment_name, equipment_service.equipment_service_id, equipment_service.number_acomodacoes FROM acomodacao INNER JOIN acomodacao_type ON acomodacao_type.acomodacao_type_id = acomodacao.acomodacao_type_id INNER JOIN equipment_service ON equipment_service.equipment_service_id = acomodacao.acomodacao_equipment_service_id WHERE equipment_service.equipment_service_id =  " + servico_acomodacao_id + " AND acomodacao_type.acomodacao_type_id = " + type_id;
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+
+
+module.exports.getMesaTypeFilter = async function(rest_id, type_id) { 
+    try {
+        let sql = "SELECT *, mesa_type.mesa_type_id, mesa_type.mesa_type_name ,restaurant.establishment_id, restaurant.establishment_name, restaurant.restaurant_id, restaurant.restaurante_number_tables, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name FROM mesa INNER JOIN mesa_type ON mesa_type.mesa_type_id = mesa.mesa_type_id INNER JOIN restaurant ON restaurant.restaurant_id = mesa.mesa_restaurant_id INNER JOIN type_restaurant ON type_restaurant.type_restaurant_id = restaurant.restaurant_type_id WHERE restaurant.restaurant_id = " + rest_id + " AND mesa_type.mesa_type_id = " + type_id;
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+
+module.exports.getUtilizadorDetails = async function(uti_id) { //DETALHES PARA AMBOS OS TIPOS 'CLIENTE' E 'GESTOR'
+    try {
+        let sql = "SELECT utilizador.utilizador_name, utilizador.utilizador_username, utilizador.utilizador_email FROM utilizador WHERE utilizador.utilizador_id = " + uti_id;
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.getUtilizadorDetailsRestaurantLike = async function(uti_id) { //DETALHES PARA AMBOS OS TIPOS 'CLIENTE' E 'GESTOR'
+    try {
+        let sql = "SELECT utilizador.utilizador_id, like_restaurante.like_utilizador, like_restaurante.like_restaurante, restaurant.restaurant_id, restaurant.restaurante_number_tables, restaurant.establishment_name, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name FROM utilizador INNER JOIN like_restaurante ON like_restaurante.like_utilizador = utilizador.utilizador_id INNER JOIN restaurant ON restaurant.restaurant_id = like_restaurante.like_restaurante INNER JOIN type_restaurant ON type_restaurant.type_restaurant_id = restaurant.restaurant_type_id WHERE utilizador.utilizador_id = " + uti_id + " LIMIT 5";
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.getUtilizadorDetailsAcomodacaoLike = async function(uti_id) { //DETALHES PARA AMBOS OS TIPOS 'CLIENTE' E 'GESTOR'
+    try {
+        let sql = "SELECT utilizador.utilizador_id, like_servico_acomodacao.like_utilizador, like_servico_acomodacao.like_servico_acomodacao, equipment_service.equipment_service_id, equipment_service.number_acomodacoes, equipment_service.establishment_name FROM utilizador INNER JOIN like_servico_acomodacao ON like_servico_acomodacao.like_utilizador = utilizador.utilizador_id INNER JOIN equipment_service ON equipment_service.equipment_service_id = like_servico_acomodacao.like_servico_acomodacao WHERE utilizador.utilizador_id = " + uti_id + " LIMIT 5";
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.getUtilizadorDetailsEstacionamentoLike = async function(uti_id) { //DETALHES PARA AMBOS OS TIPOS 'CLIENTE' E 'GESTOR'
+    try {
+        let sql = "SELECT utilizador.utilizador_id, like_estacionamento.like_utilizador, like_estacionamento.like_estacionamento, parking_lot.parking_lot_id, parking_lot.parking_lot_number_spots, parking_lot.establishment_name FROM utilizador INNER JOIN like_estacionamento ON like_estacionamento.like_utilizador = utilizador.utilizador_id INNER JOIN parking_lot ON parking_lot.parking_lot_id = like_estacionamento.like_estacionamento WHERE utilizador.utilizador_id = " + uti_id + " LIMIT 5";
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+
+
+module.exports.getUtilizadorEstablishmentRestaurantDetails = async function(uti_id) { //DETALHES PARA AMBOS O TIPO 'GESTOR' | ESTABELECIMENTOS QUE POSSUI/CRIOU
+    try {
+        let sql = "SELECT *, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name FROM restaurant INNER JOIN type_restaurant ON type_restaurant.type_restaurant_id = restaurant.restaurant_type_id WHERE establishment_utilizador_id = " + uti_id + " LIMIT 5";
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.getUtilizadorEstablishmentAcomodacaoDetails = async function(uti_id) { //DETALHES PARA AMBOS O TIPO 'GESTOR' | ESTABELECIMENTOS QUE POSSUI/CRIOU
+    try {
+        let sql = "SELECT * FROM equipment_service WHERE establishment_utilizador_id = " + uti_id + " LIMIT 5";
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.getUtilizadorEstablishmentEstacionamentoDetails = async function(uti_id) { //DETALHES PARA AMBOS O TIPO 'GESTOR' | ESTABELECIMENTOS QUE POSSUI/CRIOU
+    try {
+        let sql = "SELECT * FROM parking_lot WHERE establishment_utilizador_id = " + uti_id + " LIMIT 5";
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
 
 //REMOVER UM LIKE
 module.exports.DeleteLike = async function(uti_id, est_id) {
@@ -179,10 +360,27 @@ module.exports.DeleteUser = async function(uti_id) {
 
 //ALTERAR O TIPO DE UTILIZADOR PARA GESTOR
 
-module.exports.UpdateType = async function(utilizador_id){
+module.exports.UpdateTypeGestor = async function(utilizador_id){
 
     try {
         let sql = "UPDATE utilizador " + "SET utilizador_type_id = '2' " + "WHERE utilizador.utilizador_id = " + utilizador_id;
+        let result = await pool.query(sql);
+        let ementasfound = result.rows;
+        console.log("[ementasModel.getEmentasUser] recipes = " + JSON.stringify(ementasfound));
+        return { status: 200, data: ementasfound };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+
+}
+
+//ALTERAR O TIPO DE UTILIZADOR 
+
+module.exports.UpdateTypeCliente = async function(utilizador_id){
+
+    try {
+        let sql = "UPDATE utilizador " + "SET utilizador_type_id = '1' " + "WHERE utilizador.utilizador_id = " + utilizador_id;
         let result = await pool.query(sql);
         let ementasfound = result.rows;
         console.log("[ementasModel.getEmentasUser] recipes = " + JSON.stringify(ementasfound));
@@ -209,11 +407,11 @@ module.exports.getUsers = async function() {
     }
 }
 
-//SELECIONAR 50 RESTAURANTES ALEATÓRIOS
+//SELECIONAR 250 RESTAURANTES ALEATÓRIOS
 
 module.exports.getRandomRestaurants = async function() {
     try {
-        let sql = "SELECT restaurant.establishment_id, restaurant.restaurant_id ,restaurant.establishment_name, restaurant.restaurant_type_id, restaurant.restaurante_number_tables, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name FROM restaurant " + "INNER JOIN type_restaurant ON type_restaurant.type_restaurant_id = restaurant.restaurant_type_id " + "ORDER BY random() LIMIT 50";
+        let sql = "SELECT *, utilizador.utilizador_id, utilizador.utilizador_name, utilizador.utilizador_username, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name FROM restaurant INNER JOIN utilizador ON utilizador.utilizador_id = restaurant.establishment_utilizador_id INNER JOIN type_restaurant ON type_restaurant.type_restaurant_id = restaurant.restaurant_type_id " + "ORDER BY random() LIMIT 250";
         let result = await pool.query(sql);
         let users = result.rows;
         console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
@@ -223,6 +421,35 @@ module.exports.getRandomRestaurants = async function() {
         return { status: 500, data: err };
     }
 }
+
+
+module.exports.getRandomAcomodacao = async function() {
+    try {
+        let sql = "SELECT *, utilizador.utilizador_id, utilizador.utilizador_name, utilizador.utilizador_username FROM equipment_service INNER JOIN utilizador ON utilizador.utilizador_id = equipment_service.establishment_utilizador_id " + "ORDER BY random() LIMIT 250";
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.getRandomEstacionamento = async function() {
+    try {
+        let sql = "SELECT *, utilizador.utilizador_id, utilizador.utilizador_name, utilizador.utilizador_username FROM parking_lot INNER JOIN utilizador ON utilizador.utilizador_id = parking_lot.establishment_utilizador_id " + "ORDER BY random() LIMIT 250";
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+
 
 //PARA GERAR NOVOS RESTAURANTES RANDOM, HÁ UM BOTÃO NO FIM DA PAGINA QUE PERGUNTA: NÃO ENCONTROU O QUE PROCURA ? DESCOBRIR MAIS (QUE CHAMARÁ UM NOVO SELECT)
 
@@ -300,11 +527,13 @@ module.exports.getSearchRestaurants = async function(search_string) {
     }
 }
 
-//REGISTO DE UTILIZADOR
+//REGISTO DE UTILIZADOR (CLIENTE)
 
 module.exports.saveUser = async function(user) {
 
     let password = bcrypt.hashSync(user.utilizador_password, salt);
+
+    let utilizador_type_id = 1;
 
     console.log("Hash: " + password);
     //console.log("[usersModel.saveUser] user = " + JSON.stringify(user));
@@ -321,7 +550,45 @@ module.exports.saveUser = async function(user) {
         let sql =
             "INSERT " +
             "INTO utilizador " +
-            "(utilizador_name, utilizador_username, utilizador_email, utilizador_password, utilizador_type_id) " +
+            "(utilizador_name, utilizador_username, utilizador_email, utilizador_password, " + utilizador_type_id + ") " +
+            "VALUES ($1, $2, $3, $4, $5) " +
+            "RETURNING utilizador_id";
+
+            //console.log(user.user_name + "|" + user.user_password + "|" + user.user_morada + "|" + user.user_email + "|" + user.user_points + "|" + user.user_admin + "|" + user.user_pt + "|" + user.user_nutri);
+        let result = await pool.query(sql, [user.utilizador_name, user.utilizador_username, user.utilizador_email, password, user.utilizador_type_id]);
+        
+        return { status: 200, result: result };
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+    }
+}
+
+//REGISTO DE UTILIZADOR (GESTOR)
+
+module.exports.saveUserGestor = async function(user) {
+
+    let password = bcrypt.hashSync(user.utilizador_password, salt);
+
+    let utilizador_type_id = 2;
+
+    console.log("Hash: " + password);
+    //console.log("[usersModel.saveUser] user = " + JSON.stringify(user));
+    /* checks all fields needed and ignores other fields
+    if (typeof user != "object" || failUser(user)) {
+        if (user.errMsg)
+            return { status: 400, data: { msg: user.errMsg } };
+        else
+            return { status: 400, data: { msg: "Malformed data" } };
+    }*/
+    //let password = brcypt.hashSync(user.user_password, salt);
+    try {
+
+        let sql =
+            "INSERT " +
+            "INTO utilizador " +
+            "(utilizador_name, utilizador_username, utilizador_email, utilizador_password, " + utilizador_type_id + ") " +
             "VALUES ($1, $2, $3, $4, $5) " +
             "RETURNING utilizador_id";
 
@@ -357,6 +624,45 @@ module.exports.saveToldoService = async function(toldoservice) {
 
         console.log(err);
         return { status: 500, result: err };
+    }
+}
+
+module.exports.DeleteRestauranteLike = async function(uti_id, rest_id) {
+    try {
+        let sql = "DELETE FROM like_restaurante " + "WHERE like_restaurante.like_utilizador = " + uti_id + " AND like_restaurante.like_restaurante = " + rest_id;
+        let result = await pool.query(sql);
+        let userfound = result.rows;
+        console.log("[usersModel.getUserDados] dados_utilizador = " + JSON.stringify(userfound));
+        return { status: 200, data: userfound };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.DeleteAcomodacaoLike = async function(uti_id, service_acomodacao_id) {
+    try {
+        let sql = "DELETE FROM like_servico_acomodacao " + "WHERE like_servico_acomodacao.like_utilizador = " + uti_id + " AND like_servico_acomodacao.like_servico_acomodacao = " + service_acomodacao_id;
+        let result = await pool.query(sql);
+        let userfound = result.rows;
+        console.log("[usersModel.getUserDados] dados_utilizador = " + JSON.stringify(userfound));
+        return { status: 200, data: userfound };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.DeleteEstacionamentoLike = async function(uti_id, estacionamento_id) {
+    try {
+        let sql = "DELETE FROM like_estacionamento " + "WHERE like_estacionamento.like_utilizador = " + uti_id + " AND like_estacionamento.like_estacionamento = " + estacionamento_id;
+        let result = await pool.query(sql);
+        let userfound = result.rows;
+        console.log("[usersModel.getUserDados] dados_utilizador = " + JSON.stringify(userfound));
+        return { status: 200, data: userfound };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
     }
 }
 
@@ -408,21 +714,21 @@ module.exports.saveEstacionamento = async function(estacionamento) {
     }
 }
 
-//GUARDAR UM LIKE NUM ESTABELECIMENTO
+//GUARDAR UM LIKE NUM ESTABELECIMENTO (RESTAURANTE)
 
-module.exports.saveLike = async function(like) {
+module.exports.saveLikeRestaurante = async function(like) {
 
     try {
 
         let sql =
             "INSERT " +
-            "INTO like_establishment " +
-            "(user_id, estabelecimento_id) " +
+            "INTO like_restaurante " +
+            "(like_utilizador, like_restaurante) " +
             "VALUES ($1, $2) " +
             "RETURNING like_id";
 
             //console.log(user.user_name + "|" + user.user_password + "|" + user.user_morada + "|" + user.user_email + "|" + user.user_points + "|" + user.user_admin + "|" + user.user_pt + "|" + user.user_nutri);
-        let result = await pool.query(sql, [like.user_id, like.estabelecimento_id]);
+        let result = await pool.query(sql, [like.like_utilizador, like.like_restaurante]);
         
         return { status: 200, result: result };
     } catch (err) {
@@ -432,6 +738,53 @@ module.exports.saveLike = async function(like) {
     }
 }
 
+//GUARDAR UM LIKE NUM ESTABELECIMENTO (SERVICO DE ACOMODACAO DE PRAIA)
+
+module.exports.saveLikeAcomodacao = async function(like) {
+
+    try {
+
+        let sql =
+            "INSERT " +
+            "INTO like_servico_acomodacao " +
+            "(like_utilizador, like_servico_acomodacao) " +
+            "VALUES ($1, $2) " +
+            "RETURNING like_id";
+
+            //console.log(user.user_name + "|" + user.user_password + "|" + user.user_morada + "|" + user.user_email + "|" + user.user_points + "|" + user.user_admin + "|" + user.user_pt + "|" + user.user_nutri);
+        let result = await pool.query(sql, [like.like_utilizador, like.like_servico_acomodacao]);
+        
+        return { status: 200, result: result };
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+    }
+}
+
+//GUARDAR UM LIKE NUM ESTABELECIMENTO (ESTACIONAMENTO)
+
+module.exports.saveLikeEstacionamento = async function(like) {
+
+    try {
+
+        let sql =
+            "INSERT " +
+            "INTO like_estacionamento " +
+            "(like_utilizador, like_estacionamento) " +
+            "VALUES ($1, $2) " +
+            "RETURNING like_id";
+
+            //console.log(user.user_name + "|" + user.user_password + "|" + user.user_morada + "|" + user.user_email + "|" + user.user_points + "|" + user.user_admin + "|" + user.user_pt + "|" + user.user_nutri);
+        let result = await pool.query(sql, [like.like_utilizador, like.like_estacionamento]);
+        
+        return { status: 200, result: result };
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+    }
+}
 
 
 
@@ -837,9 +1190,35 @@ module.exports.getQuantityLikesRestaurant = async function(rest_id) {
 
 //VERIFICAR SE UM UTILIZADOR TEM UM x ESTABELECIMENTO EM QUE DEU LIKE
 
-module.exports.getCheckEstabelecimento = async function(uti_id, est_id) {
+module.exports.getCheckEstabelecimentoRestaurante = async function(uti_id, est_id) {
     try {
-        let sql = "SELECT COUNT(*) FROM like_establishment WHERE estabelecimento_id = " + rest_id;
+        let sql = "SELECT * FROM like_restaurante WHERE like_restaurante.like_utilizador = " + uti_id + " AND like_restaurante.like_restaurante = " + est_id;
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.getCheckEstabelecimentoAcomodacao = async function(uti_id, est_id) {
+    try {
+        let sql = "SELECT * FROM like_servico_acomodacao WHERE like_servico_acomodacao.like_utilizador = " + uti_id + " AND like_servico_acomodacao.like_servico_acomodacao = " + est_id;
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.getCheckEstabelecimentoEstacionamento = async function(uti_id, est_id) {
+    try {
+        let sql = "SELECT * FROM like_estacionamento WHERE like_estacionamento.like_utilizador = " + uti_id + " AND like_estacionamento.like_estacionamento = " + est_id;
         let result = await pool.query(sql);
         let users = result.rows;
         console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
@@ -972,4 +1351,73 @@ module.exports.getParkingLots = async function(rest_id) {
         return { status: 500, data: err };
     }
 }
+
+
+module.exports.saveReportRestaurante = async function(report) {
+
+    try {
+
+        let sql =
+            "INSERT " +
+            "INTO report_restaurante " +
+            "(report_restaurante_id, report_restaurante_date) " +
+            "VALUES ($1, $2) " +
+            "RETURNING report_id";
+
+            //console.log(user.user_name + "|" + user.user_password + "|" + user.user_morada + "|" + user.user_email + "|" + user.user_points + "|" + user.user_admin + "|" + user.user_pt + "|" + user.user_nutri);
+        let result = await pool.query(sql, [report.report_restaurante_id, report_restaurante_date]);
+        
+        return { status: 200, result: result };
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+    }
+}
+
+module.exports.saveReportAcomodacao = async function(report) {
+
+    try {
+
+        let sql =
+            "INSERT " +
+            "INTO report_servico_acomodacao " +
+            "(report_servico_acomodacao_id, report_servico_acomodacao_date) " +
+            "VALUES ($1, $2) " +
+            "RETURNING report_id";
+
+            //console.log(user.user_name + "|" + user.user_password + "|" + user.user_morada + "|" + user.user_email + "|" + user.user_points + "|" + user.user_admin + "|" + user.user_pt + "|" + user.user_nutri);
+        let result = await pool.query(sql, [report.report_servico_acomodacao_id, report.report_servico_acomodacao_date]);
+        
+        return { status: 200, result: result };
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+    }
+}
+
+module.exports.saveReportEstacionamento = async function(report) {
+
+    try {
+
+        let sql =
+            "INSERT " +
+            "INTO report_estacionamento " +
+            "(report_estacionamento_id, report_estacionamento_date) " +
+            "VALUES ($1, $2) " +
+            "RETURNING report_id";
+
+            //console.log(user.user_name + "|" + user.user_password + "|" + user.user_morada + "|" + user.user_email + "|" + user.user_points + "|" + user.user_admin + "|" + user.user_pt + "|" + user.user_nutri);
+        let result = await pool.query(sql, [report.report_estacionamento_id, report.report_estacionamento_date]);
+        
+        return { status: 200, result: result };
+    } catch (err) {
+
+        console.log(err);
+        return { status: 500, result: err };
+    }
+}
+
+
 
