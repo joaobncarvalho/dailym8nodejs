@@ -962,9 +962,62 @@ DELETE FROM mesa WHERE mesa_restaurant_id =
 
 DELETE FROM plate WHERE plate_restaurant_id =
 
+DELETE FROM restaurant WHERE restaurant_id = 
 
+-- APAGAR SERVICO DE ACOMODACAO
+
+DELETE FROM report_restaurante WHERE report_restaurante_id = 
+
+DELETE FROM reserva_mesa WHERE reserva.
+
+DELETE FROM mesa WHERE mesa_restaurant_id =
+
+DELETE FROM plate WHERE plate_restaurant_id =
 
 ------------------------------------------------------------------------------
+
+--APAGAR POSIÇÃO DA ACOMODACAO --
+
+DELETE FROM position_acomodacao using acomodacao, equipment_service WHERE position_acomodacao.acomodacao_identifier = acomodacao.acomodacao_id AND acomodacao.acomodacao_equipment_service_id = equipment_service.equipment_service_id AND equipment_service.equipment_service_id = 'x'               
+
+--APAGAR TODAS AS ACOMODACOES DO SERVICO--
+
+DELETE FROM acomodacao WHERE acomodacao_equipment_service_id = 'x'
+
+--APAGAR RESERVAS DE UM SISTEMA DE ACOMODAÇÃO--
+
+DELETE FROM reserva_acomodacao USING acomdacao, equipment_service WHERE reserva_acomodacao.acomodacao_identifier_reservation = acomodacao.acomodacao_id AND acomodacao.acomodacao_equipment_service_id = equipment_service.equipment_service_id AND equipment_service.equipment_service_id = 'x'
+------------------------------------------------------------------------------
+
+------- OBTER DETALHES de restaurante PT.1 (NOME DO RESTAURANTE, NUMERO DE MESAS, DESCRICAO, TIPO DE RESTAURANTE, LATITUDE E LONGITUDE PARA MARCAR O PONTO, A DISTANCIA É CALCULADA POR JAVASCRIPT)
+
+SELECT *, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name, place_restaurante.local_id, place_restaurante.local_morada, place_restaurante.ref_system_id, place_restaurante.geometry_info_point, place_restaurante.local_restaurante_id, place_restaurante.local_latitude, place_restaurante.local_longitude 
+FROM restaurant
+INNER JOIN type_restaurant ON type_restaurant.type_restaurant_id = restaurant.restaurant_type_id
+INNER JOIN place_restaurante ON place_restaurante.local_restaurante_id = restaurant.restaurant_id
+WHERE restaurant.restaurant_id = 'x'
+
+---------- OBTER NUMERO DE LIKES DO LOCAL (DETALHES DO RESTAURANTE PT.3)
+
+SELECT COUNT(*) FROM like_restaurante
+WHERE like_restaurante = 'x'
+
+---------- OBTER A QUANTIDADE DE MESAS DISPONIVEIS (DETALHES DO RESTAURANTE PT.4)
+
+SELECT COUNT(*) FROM mesa WHERE mesa_restaurant_id = 'x' AND mesa_availability = '0'
+
+---------- INSERTS DE TESTE DE MESA ----------
+
+INSERT INTO mesa (mesa_availability ,mesa_number, mesa_size, mesa_restaurant_id, mesa_type_id, mesa_price)
+VALUES ('0' ,12, 3, 5, 2, 12.45)
+
+
+INSERT INTO mesa (mesa_availability ,mesa_number, mesa_size, mesa_restaurant_id, mesa_type_id, mesa_price)
+VALUES ('0' ,6, 2, 5, 1, 8.12)
+
+INSERT INTO mesa (mesa_availability ,mesa_number, mesa_size, mesa_restaurant_id, mesa_type_id, mesa_price)
+VALUES ('1' ,4, 4, 5, 1, 9.21)
+
 
 --- TERMINAR ESTA PARTE DA BASE DE DADOS ----
 CREATE TABLE item_

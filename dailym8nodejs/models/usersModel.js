@@ -53,41 +53,41 @@ var salt = 10;
 
    // ELIMINAR SERVIÇO DE RESTAURANTE - MÉTODOS:
 
-      //ELIMINAR TODOS OS REPORTS DE UM RESTAURANTE
+      //ELIMINAR TODOS OS REPORTS DE UM RESTAURANTE -- FEITO
 
-      //ELIMINAR TODAS AS RESERVAS DE UM RESTAURANTE
+      //ELIMINAR TODAS AS RESERVAS DE UM RESTAURANTE -- FEITO
 
-      //ELIMINAR TODOS OS PRATOS DE UM RESTAURANTE
+      //ELIMINAR TODOS OS PRATOS DE UM RESTAURANTE -- FEITO
 
-      //ELIMINAR TODAS AS MESAS DE UM RESTAURANTE
+      //ELIMINAR TODAS AS MESAS DE UM RESTAURANTE -- FEITO
 
-      //ELIMINAR O ESTABELECIMENTO
+      //ELIMINAR O ESTABELECIMENTO -- FEITO
 
-   // ELIMINAR SERVIÇO DE ACOMODACAO - MÉTODOS:
+   // ELIMINAR SERVIÇO DE ACOMODACAO - MÉTODOS: 
 
-      //ELIMINAR TODOS OS REPORTS DE UM SERVIÇO DE TOLDOS
+      //ELIMINAR TODOS OS REPORTS DE UM SERVIÇO DE TOLDOS -- FEITO
 
-      //ELIMINAR TODAS AS RESERVAS DE UM SERVICO DE TOLDOS
+      //ELIMINAR TODAS AS RESERVAS DE UM SERVICO DE TOLDOS -- FEITO
 
-      //ELIMINAR TODAS AS ACOMODACOES E POSIÇÕES DAS MESMAS RESPETIVAS AO SERVIÇO
+      //ELIMINAR TODAS AS ACOMODACOES E POSIÇÕES DAS MESMAS RESPETIVAS AO SERVIÇO --FEITO
 
-      //ELIMINAR O ESTABELECIMENTO
+      //ELIMINAR O ESTABELECIMENTO --FEITO
 
     // ELIMINAR ESTACIONAMENTO - MÉTODOS:
 
-      //ELIMINAR TODOS OS REPORTS DE UM ESTACIONAMENTO
+      //ELIMINAR TODOS OS REPORTS DE UM ESTACIONAMENTO -- FEITO
 
-      //ELIMINAR TODOS AS RESERVAS DE UM SERVICO DE TOLDOS
+      //ELIMINAR TODOS AS RESERVAS DE UM SERVICO DE TOLDOS -- FEITO
 
-      //ELIMINAR TODOS OS LUGARES DO ESTACIONAMENTO
+      //ELIMINAR TODOS OS LUGARES DO ESTACIONAMENTO -- FEITO
 
-      //ELIMINAR O ESTABELECIMENTO
+      //ELIMINAR O ESTABELECIMENTO -- FEITO
 
-     //ELIMINAR CONTA (TANTO O UTILIZADOR QUANTO O ADMIN PODEM FAZÊ-LO)
+     //ELIMINAR CONTA (TANTO O UTILIZADOR QUANTO O ADMIN PODEM FAZÊ-LO) -- FEITO
 
-// VISUALIZAR DETALHES DE UM SERVIÇO (RESTAURANTE/ESTACIONAMENTO/ACOMODACOES):
+// VISUALIZAR DETALHES DE UM SERVIÇO (RESTAURANTE/ESTACIONAMENTO/ACOMODACOES): --INICIALMENTE VAI TER QUE AVALIAR O TYPE_IDENTIFIER QUE IDENTIFICA O SERVIÇO DE MODO A PREPARAR A PAGINA DE EXIBIÇÃO DE INFORMAÇÃO
 
-   //INFORMAÇÕES DO DONO, NOME, DESCRIÇÃO, TIPO (CASO FOR RESTAURANTE),NUMERO DE MESAS/LUGARES/ACOMODACOES DISPONIVEIS ATUALMENTE, NUMERO DE LIKES E MARCADOR COM POSIÇÃO DO LOCAL JUNTAMENTE COM A DISTANCIA
+   //INFORMAÇÕES DO DONO, NOME, DESCRIÇÃO, TIPO (CASO FOR RESTAURANTE),NUMERO DE MESAS/LUGARES/ACOMODACOES DISPONIVEIS ATUALMENTE, NUMERO DE LIKES E MARCADOR COM POSIÇÃO DO LOCAL JUNTAMENTE COM A DISTANCIA | 50% FEITO, POIS FALTA REPETIR PARA AS ACOMODACOES DE PRAIA E LUGARES DE ESTACIONAMENTO
 
 //OBTER OS PRATOS DE UM RESTAURANTE
 
@@ -154,6 +154,125 @@ var salt = 10;
 
 /// APAGAR CONTAS (ALEM DOS PROPRIOS UTILIZADORES)
 
+module.exports.DeleteUtilizadorAccount = async function(uti_id) {
+    try {
+        let sql = "DELETE FROM utilizador WHERE utilizador.utilizador_id = " + uti_id;
+        let result = await pool.query(sql);
+        let userfound = result.rows;
+        console.log("[usersModel.getUserDados] dados_utilizador = " + JSON.stringify(userfound));
+        return { status: 200, data: userfound };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.DeleteReservasMesasRestaurant = async function(rest_id) {
+    try {
+        let sql = "DELETE FROM reserva_mesa USING mesa, restaurant WHERE reserva_mesa.mesa_identifier_reservation = mesa.mesa_id AND mesa.mesa_restaurant_id = restaurant.restaurant_id AND restaurant.restaurant_id = " + rest_id;
+        let result = await pool.query(sql);
+        let userfound = result.rows;
+        console.log("[usersModel.getUserDados] dados_utilizador = " + JSON.stringify(userfound));
+        return { status: 200, data: userfound };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+
+
+module.exports.DeleteReservasLugaresEstacionamento = async function(rest_id) {
+    try {
+        let sql = "DELETE FROM reserva_spot USING spot, parking_lot WHERE reserva_spot.spot_identifier_reservation = spot.spot_id AND spot.spot_parking_lot_id = parking_lot.parking_lot_id AND parking_lot.parking_lot_id = " + rest_id;
+        let result = await pool.query(sql);
+        let userfound = result.rows;
+        console.log("[usersModel.getUserDados] dados_utilizador = " + JSON.stringify(userfound));
+        return { status: 200, data: userfound };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.DeleteLugaresFromEstacionamento = async function(rest_id) {
+    try {
+        let sql = "DELETE FROM spot WHERE spot_parking_lot_id = " + rest_id;
+        let result = await pool.query(sql);
+        let userfound = result.rows;
+        console.log("[usersModel.getUserDados] dados_utilizador = " + JSON.stringify(userfound));
+        return { status: 200, data: userfound };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.DeleteEstacionamento = async function(rest_id) {
+    try {
+        let sql = "DELETE FROM parking_lot WHERE parking_lot_id = " + rest_id;
+        let result = await pool.query(sql);
+        let userfound = result.rows;
+        console.log("[usersModel.getUserDados] dados_utilizador = " + JSON.stringify(userfound));
+        return { status: 200, data: userfound };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.DeleteRestaurant = async function(rest_id) {
+    try {
+        let sql = "DELETE FROM restaurant WHERE restaurant_id = " + rest_id;
+        let result = await pool.query(sql);
+        let userfound = result.rows;
+        console.log("[usersModel.getUserDados] dados_utilizador = " + JSON.stringify(userfound));
+        return { status: 200, data: userfound };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.DeleteServicoAcomodacao = async function(rest_id) {
+    try {
+        let sql = "DELETE FROM equipment_service WHERE equipment_service_id = " + rest_id;
+        let result = await pool.query(sql);
+        let userfound = result.rows;
+        console.log("[usersModel.getUserDados] dados_utilizador = " + JSON.stringify(userfound));
+        return { status: 200, data: userfound };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+
+module.exports.DeletePratosFromRestaurant = async function(rest_id) {
+    try {
+        let sql = "DELETE FROM plate WHERE plate_restaurant_id = " + rest_id;
+        let result = await pool.query(sql);
+        let userfound = result.rows;
+        console.log("[usersModel.getUserDados] dados_utilizador = " + JSON.stringify(userfound));
+        return { status: 200, data: userfound };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.DeleteMesasFromRestaurant = async function(rest_id) {
+    try {
+        let sql = "DELETE FROM mesa WHERE mesa_restaurant_id = " + rest_id;
+        let result = await pool.query(sql);
+        let userfound = result.rows;
+        console.log("[usersModel.getUserDados] dados_utilizador = " + JSON.stringify(userfound));
+        return { status: 200, data: userfound };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
 
 module.exports.DeleteReportFromRestaurant = async function(rest_id) {
     try {
@@ -167,6 +286,73 @@ module.exports.DeleteReportFromRestaurant = async function(rest_id) {
         return { status: 500, data: err };
     }
 }
+
+module.exports.DeleteReportFromEstacionamento = async function(rest_id) {
+    try {
+        let sql = "DELETE FROM report_estacionamento WHERE report_estacionamento_id = " + rest_id;
+        let result = await pool.query(sql);
+        let userfound = result.rows;
+        console.log("[usersModel.getUserDados] dados_utilizador = " + JSON.stringify(userfound));
+        return { status: 200, data: userfound };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.DeletePositionsServicoAcomodacao = async function(rest_id) {
+    try {
+        let sql = "DELETE FROM position_acomodacao using acomodacao, equipment_service WHERE position_acomodacao.acomodacao_identifier = acomodacao.acomodacao_id AND acomodacao.acomodacao_equipment_service_id = equipment_service.equipment_service_id AND equipment_service.equipment_service_id = " + rest_id;
+        let result = await pool.query(sql);
+        let userfound = result.rows;
+        console.log("[usersModel.getUserDados] dados_utilizador = " + JSON.stringify(userfound));
+        return { status: 200, data: userfound };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.DeleteAcomodacoesServicoAcomodacao = async function(rest_id) {
+    try {
+        let sql = "DELETE FROM acomodacao WHERE acomodacao_equipment_service_id = " + rest_id;
+        let result = await pool.query(sql);
+        let userfound = result.rows;
+        console.log("[usersModel.getUserDados] dados_utilizador = " + JSON.stringify(userfound));
+        return { status: 200, data: userfound };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+
+module.exports.DeleteReservasServicoAcomodacao = async function(rest_id) {
+    try {
+        let sql = "DELETE FROM reserva_acomodacao USING acomdacao, equipment_service WHERE reserva_acomodacao.acomodacao_identifier_reservation = acomodacao.acomodacao_id AND acomodacao.acomodacao_equipment_service_id = equipment_service.equipment_service_id AND equipment_service.equipment_service_id = " + rest_id;
+        let result = await pool.query(sql);
+        let userfound = result.rows;
+        console.log("[usersModel.getUserDados] dados_utilizador = " + JSON.stringify(userfound));
+        return { status: 200, data: userfound };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.DeleteReportFromServicoAcomodacao = async function(rest_id) {
+    try {
+        let sql = "DELETE FROM report_servico_acomodacao WHERE report_servico_acomodacao_id = " + rest_id;
+        let result = await pool.query(sql);
+        let userfound = result.rows;
+        console.log("[usersModel.getUserDados] dados_utilizador = " + JSON.stringify(userfound));
+        return { status: 200, data: userfound };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
 
 module.exports.getAcomodacaoPositionFilter = async function(servico_acomodacao_id, line_value) { 
     try {
