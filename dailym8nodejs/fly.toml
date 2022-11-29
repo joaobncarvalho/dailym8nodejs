@@ -1,15 +1,11 @@
-# fly.toml file generated for dailym8nodeproj on 2022-11-22T14:08:18Z
+# fly.toml file generated for dailym8oficial on 2022-11-29T15:04:25Z
 
-app = "dailym8nodeproj"
+app = "dailym8oficial"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
 
-[build]
-  builder = "heroku/buildpacks:20"
-
 [env]
-  PORT = "8080"
 
 [experimental]
   allowed_public_ports = []

@@ -1061,12 +1061,27 @@ WHERE plate.plate_restaurant_id = 'x' AND plate.plate_availability = 'x'
 
 ----------------------- OBTER TODAS MESAS DISPONIVEIS (COM A INFORMAÇÃO) ------------------------
 
+SELECT *, mesa_type.mesa_type_id, mesa_type.mesa_type_name
+FROM mesa
+INNER JOIN mesa_type ON mesa_type.mesa_type_id = mesa.mesa_type_id
+WHERE mesa.mesa_restaurant_id = 'x' AND mesa.mesa_availability = '0'
 
 
 ----------------------- OBTER TODAS AS ACOMODACOES DISPONIVEIS (COM INFORMAÇÃO DA ACOMODACAO - TIPO DE ACOMODACAO) ------------------------
 
 
+SELECT *, acomodacao_type.acomodacao_type_id, acomodacao_type.acomodacao_type_name
+FROM acomodacao
+INNER JOIN acomodacao_type ON acomodacao_type.acomodacao_type_id = acomodacao.acomodacao_type_id
+WHERE acomodacao.acomodacao_equipment_service_id = 'x' AND acomodacao.acomodacao_availability = '0'
+
 ----------------------- OBTER TODOS OS LUGARES DE ESTACIONAMENTO DISPONIVEIS (COM A INFORMAÇÃO) -------------------------------
+
+SELECT *
+FROM spot
+WHERE spot.spot_parking_lot_id = 'x' AND spot.spot_availability = '0'
+
+------------------------- RESERVAR UMA MESA ------------------------
 
 
 
