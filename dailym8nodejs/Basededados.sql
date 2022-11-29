@@ -1006,6 +1006,38 @@ WHERE like_restaurante = 'x'
 
 SELECT COUNT(*) FROM mesa WHERE mesa_restaurant_id = 'x' AND mesa_availability = '0'
 
+------- OBTER DETALHES de estacionamento PT.1 (NOME DO ESTACIONAMENTO, NUMERO DE LUGARES, DESCRICAO, TIPO DE RESTAURANTE, LATITUDE E LONGITUDE PARA MARCAR O PONTO, A DISTANCIA É CALCULADA POR JAVASCRIPT)
+
+SELECT *, place_estacionamento.local_id, place_estacionamento.local_morada, place_estacionamento.ref_system_id, place_estacionamento.geometry_info_point, place_estacionamento.local_estacionamento_id, place_estacionamento.local_latitude, place_estacionamento.local_longitude 
+FROM parking_lot
+INNER JOIN place_estacionamento ON place_estacionamento.local_estacionamento_id = parking_lot.parking_lot_id
+WHERE parking_lot.parking_lot_id = 'x'
+
+---------- OBTER NUMERO DE LIKES DO LOCAL (DETALHES DO RESTAURANTE PT.3)
+
+SELECT COUNT(*) FROM like_estacionamento
+WHERE like_estacionamento = 'x'
+
+---------- OBTER A QUANTIDADE DE LUGARES DISPONIVEIS (DETALHES DO RESTAURANTE PT.4)
+
+SELECT COUNT(*) FROM spot WHERE spot_parking_lot_id = 'x' AND spot_availability = '0'
+
+------- OBTER DETALHES de SERVICO DE ACOMODACA PT.1 (NOME DO ESTACIONAMENTO, NUMERO DE LUGARES, DESCRICAO, TIPO DE RESTAURANTE, LATITUDE E LONGITUDE PARA MARCAR O PONTO, A DISTANCIA É CALCULADA POR JAVASCRIPT)
+
+SELECT *, place_servico_acomodacoes.local_id, place_servico_acomodacoes.local_morada, place_servico_acomodacoes.ref_system_id, place_servico_acomodacoes.geometry_info_point, place_servico_acomodacoes.local_estacionamento_id, place_servico_acomodacoes.local_latitude, place_servico_acomodacoes.local_longitude 
+FROM equipment_service
+INNER JOIN place_servico_acomodacoes ON place_servico_acomodacoes.local_servico_acomodacoes_id = equipment_service.equipment_service_id
+WHERE equipment_service.equipment_service_id = 'x'
+
+---------- OBTER NUMERO DE LIKES DO LOCAL (DETALHES DO RESTAURANTE PT.3)
+
+SELECT COUNT(*) FROM like_servico_acomodacao
+WHERE like_servico_acomodacao = 'x'
+
+---------- OBTER A QUANTIDADE DE LUGARES DISPONIVEIS (DETALHES DO RESTAURANTE PT.4)
+
+SELECT COUNT(*) FROM acomodacao WHERE acomodacao_equipment_service_id = 'x' AND acomodacao_availability = '0'
+
 ---------- INSERTS DE TESTE DE MESA ----------
 
 INSERT INTO mesa (mesa_availability ,mesa_number, mesa_size, mesa_restaurant_id, mesa_type_id, mesa_price)
