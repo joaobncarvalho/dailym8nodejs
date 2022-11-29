@@ -1038,6 +1038,38 @@ WHERE like_servico_acomodacao = 'x'
 
 SELECT COUNT(*) FROM acomodacao WHERE acomodacao_equipment_service_id = 'x' AND acomodacao_availability = '0'
 
+---------------- OBTER MENU DE UM RESTAURANTE -----------------
+
+SELECT *, plate_type.plate_type_id, plate_type.plate_type_name 
+FROM plate
+INNER JOIN plate_type ON plate_type.plate_type_id = plate.plate_type_identifier
+WHERE plate.plate_restaurant_id = 'x' AND plate.plate_availability = '0'
+
+------------------ FILTRAR PRATOS POR TIPO --------------------
+
+SELECT *, plate_type.plate_type_id, plate_type.plate_type_name 
+FROM plate
+INNER JOIN plate_type ON plate_type.plate_type_id = plate.plate_type_identifier
+WHERE plate.plate_restaurant_id = 'x' AND plate.plate_availability = '0' AND plate_type.plate_type_id = 'x'
+
+------------------ FILTRAR PRATOS PELA DISPONIBILIDADE ? ----------------
+
+SELECT *, plate_type.plate_type_id, plate_type.plate_type_name 
+FROM plate
+INNER JOIN plate_type ON plate_type.plate_type_id = plate.plate_type_identifier
+WHERE plate.plate_restaurant_id = 'x' AND plate.plate_availability = 'x'
+
+----------------------- OBTER TODAS MESAS DISPONIVEIS (COM A INFORMAÇÃO) ------------------------
+
+
+
+----------------------- OBTER TODAS AS ACOMODACOES DISPONIVEIS (COM INFORMAÇÃO DA ACOMODACAO - TIPO DE ACOMODACAO) ------------------------
+
+
+----------------------- OBTER TODOS OS LUGARES DE ESTACIONAMENTO DISPONIVEIS (COM A INFORMAÇÃO) -------------------------------
+
+
+
 ---------- INSERTS DE TESTE DE MESA ----------
 
 INSERT INTO mesa (mesa_availability ,mesa_number, mesa_size, mesa_restaurant_id, mesa_type_id, mesa_price)
