@@ -1083,7 +1083,119 @@ WHERE spot.spot_parking_lot_id = 'x' AND spot.spot_availability = '0'
 
 ------------------------- RESERVAR UMA MESA ------------------------
 
+INSERT INTO reserva_mesa (date_marcacao_reservation, user_identifier_reservation, mesa_identifier_reservation, date_marcada_reservation, payment_credit_card_number, payment_cvc_number)
+VALUES('2018-03-25' ,1, 5, '2018-04-05', 'dwh3728dhq291wke', '454')
 
+DELETE FROM reserva_mesa WHERE timestamp < UNIX_TIMESTAMP(DATE_SUB(NOW() - INTERVAL 'DIFERENÇA DOS DIAS + DAYS')) -- DUVIDA DE APAGAR A RESERVA APÓS ALGUM TEMPO
+
+----------------- OBTER O NUMERO DE DIAS QUE FALTAM PARA APAGAR A RESERVA--------------------
+
+SELECT id_reservation, date_marcacao_reservation, date_marcada_reservation, date_marcada_reservation - date_marcacao_reservation AS difference FROM reserva_mesa
+WHERE user_identifier_reservation = 'x' AND mesa_identifier_reservation = 'x'
+
+--------------- 2ª HIPOTESE -> O PROPRIO CLIENTE CONFIRMAR QUE ESTÁ PRESENTE NA RESERVA (MENOS INTUITIVO, MAS POSSIVEL), OU QUANDO CANCELA UMA RESERVA ------------------
+
+DELETE FROM reserva_mesa WHERE user_identifier_reservation = 'x' AND mesa_identifier_reservation = 'x'
+
+------------------- MESA INDISPONIVEL (QUANDO UMA RESERVA É MARCADA OU QUANDO O GESTOR ALTERA O SEU ESTADO) ------------------
+
+UPDATE mesa
+SET mesa.mesa_availability = '1'
+WHERE mesa.mesa_id = 'x'
+
+------------------- MESA DISPONIVEL (QUANDO UMA RESERVA TERMINA, OU QUANDO O GESTOR ALTERA O SEU ESTADO OU QUANDO A RESERVA É CANCELADA)------------------
+
+UPDATE mesa
+SET mesa.mesa_availability = '0'
+WHERE mesa.mesa_id = 'x'
+
+------------------------- RESERVAR UMA ACOMODACAO ------------------------
+
+INSERT INTO reserva_acomodacao (date_marcacao_reservation, user_identifier_reservation, acomodacao_identifier_reservation, date_marcada_reservation, payment_credit_card_number, payment_cvc_number)
+VALUES('2018-03-25' ,1, 5, '2018-04-05', 'dwh3728dhq291wke', '454')
+
+DELETE FROM reserva_acomodacao WHERE timestamp < UNIX_TIMESTAMP(DATE_SUB(NOW() - INTERVAL 'DIFERENÇA DOS DIAS + DAYS')) -- DUVIDA DE APAGAR A RESERVA APÓS ALGUM TEMPO
+
+--------------- 2ª HIPOTESE -> O PROPRIO CLIENTE CONFIRMAR QUE ESTÁ PRESENTE NA RESERVA (MENOS INTUITIVO, MAS POSSIVEL), OU QUANDO CANCELA UMA RESERVA ------------------
+
+DELETE FROM reserva_acomodacao WHERE user_identifier_reservation = 'x' AND acomodacao_identifier_reservation = 'x'
+
+------------------- ACOMODACAO INDISPONIVEL (QUANDO UMA RESERVA É MARCADA OU QUANDO O GESTOR ALTERA O SEU ESTADO) ------------------
+
+UPDATE acomodacao
+SET acomdacao.acomodacao_availability = '1'
+WHERE acomdacao.acomodacao_id = 'x'
+
+------------------- ACOMODACAO DISPONIVEL (QUANDO UMA RESERVA TERMINA, OU QUANDO O GESTOR ALTERA O SEU ESTADO OU QUANDO A RESERVA É CANCELADA)------------------
+
+UPDATE acomodacao
+SET acomdacao.acomodacao_availability = '0'
+WHERE acomdacao.acomodacao_id = 'x'
+
+------------------------- RESERVAR UM LUGAR ------------------------
+
+INSERT INTO reserva_spot (date_marcacao_reservation, user_identifier_reservation, spot_identifier_reservation, date_marcada_reservation, payment_credit_card_number, payment_cvc_number)
+VALUES('2018-03-25' ,1, 5, '2018-04-05', 'dwh3728dhq291wke', '454')
+
+DELETE FROM reserva_spot WHERE timestamp < UNIX_TIMESTAMP(DATE_SUB(NOW() - INTERVAL 'DIFERENÇA DOS DIAS + DAYS')) -- DUVIDA DE APAGAR A RESERVA APÓS ALGUM TEMPO
+
+--------------- 2ª HIPOTESE -> O PROPRIO CLIENTE CONFIRMAR QUE ESTÁ PRESENTE NA RESERVA (MENOS INTUITIVO, MAS POSSIVEL), OU QUANDO CANCELA UMA RESERVA ------------------
+
+DELETE FROM reserva_spot WHERE user_identifier_reservation = 'x' AND spot_identifier_reservation = 'x'
+
+------------------- SPOT INDISPONIVEL (QUANDO UMA RESERVA É MARCADA OU QUANDO O GESTOR ALTERA O SEU ESTADO) ------------------
+
+UPDATE spot
+SET spot.spot_availability = '1'
+WHERE spot.spot_id = 'x'
+
+------------------- SPOT DISPONIVEL (QUANDO UMA RESERVA TERMINA, OU QUANDO O GESTOR ALTERA O SEU ESTADO OU QUANDO A RESERVA É CANCELADA)------------------
+
+UPDATE spot
+SET spot.spot_availability = '0'
+WHERE spot.spot_id = 'x'
+
+----------------- CRIAR RESTAURANTE ------------------
+
+INSERT INTO restaurant(establishment_name, establishment_description, restaurant_type_id, restaurante_number_tables, establishment_utilizador_id, type_service_identifier)
+VALUES ()
+
+----------------- ADICIONAR MESA ----------------------
+
+INSERT INTO mesa(mesa_availability, mesa_number, mesa_size, mesa_restaurant_id, mesa_type_id, mesa_price)
+VALUES ()
+
+--------------- ADICIONAR PRATOS -----------------------
+
+INSERT INTO plate(plate_name, plate_price, plate_restaurant_id, plate_availability, plate_type_identifier, plate_type_description)
+VALUES ()
+
+------------- ALTERAR DISPONIBILIDADE DE PRATOS (DISPONIVEL) -----------------
+
+UPDATE plate
+SET plate.plate_availability = '0'
+WHERE plate.plate_id = 'x'
+
+------------- ALTERAR DISPONIBILIDADE DE PRATOS (INDISPONIVEL) -----------------
+
+UPDATE plate
+SET plate.plate_availability = '1'
+WHERE plate.plate_id = 'x'
+
+----------------- ADICIONAR UMA POSIÇÃO/LOCAL/PLACE PARA O SERVIÇO -------------------
+
+INSERT INTO place_estacionamento (local_morada, ref_system_id, geometry_info_point, local_estacionamento_id, local_latitude, local_longitude)
+VALUES () --- REPETE-SE PARA RESTAURANTES E ACOMODACOES DE PRAIA
+
+------------------- DETALHES DE CONFIRMAÇÃO DA RESERVA -- NÃO MUITO IMPORTANTE | SE SE TIVER TEMPO ADICIONA-SE ---------------------
+
+
+
+--------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------
+
+SELECT id_reservation, date_marcacao_reservation, date_marcada_reservation, date_marcada_reservation - date_marcacao_reservation AS difference FROM reserva_acomodacao
+WHERE user_identifier_reservation = 'x' AND acomodacao_identifier_reservation = 'x'
 
 ---------- INSERTS DE TESTE DE MESA ----------
 
