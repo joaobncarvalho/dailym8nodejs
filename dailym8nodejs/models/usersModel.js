@@ -1404,11 +1404,11 @@ module.exports.getQuantityMesasRestaurant = async function(rest_id) {
     }
 }
 
-//////////////////////////////////////////////////////// ACOMODACAO /////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////// ACOMODACAO - MOSTRA SE TIVEREM LOCALIZACAO ASSOCIADA /////////////////////////////////////////////////////////////////////
 
 module.exports.getAcomodacaoSingle = async function(est_id) {
     try {
-        let sql = "SELECT *, place_servico_acomodacoes.local_id, place_servico_acomodacoes.local_morada, place_servico_acomodacoes.ref_system_id, place_servico_acomodacoes.geometry_info_point, place_servico_acomodacoes.local_estacionamento_id, place_servico_acomodacoes.local_latitude, place_servico_acomodacoes.local_longitude FROM equipment_service INNER JOIN place_servico_acomodacoes ON place_servico_acomodacoes.local_servico_acomodacoes_id = equipment_service.equipment_service_id WHERE equipment_service.equipment_service_id = " + est_id;
+        let sql = "SELECT *, place_servico_acomodacoes.local_id, place_servico_acomodacoes.local_morada, place_servico_acomodacoes.ref_system_id, place_servico_acomodacoes.geometry_info_point, place_servico_acomodacoes.local_servico_acomodacoes_id, place_servico_acomodacoes.local_latitude, place_servico_acomodacoes.local_longitude FROM equipment_service INNER JOIN place_servico_acomodacoes ON place_servico_acomodacoes.local_servico_acomodacoes_id = equipment_service.equipment_service_id WHERE equipment_service.equipment_service_id = " + est_id;
         let result = await pool.query(sql);
         let users = result.rows;
         console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
