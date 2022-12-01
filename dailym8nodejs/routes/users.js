@@ -2,12 +2,12 @@ var express = require('express');
 var router = express.Router();
 var usersModel = require('../models/usersModel');
 
-/* GET users listing. */
+/* GET users listing. - FUNCIONAL */
 router.get('/helloworldtest', function(req, res, next) {
   res.send('Hello World');
 });
 
-/*Obter todos os utilizadores registados*/
+/*Obter todos os utilizadores registados - FUNCIONAL */
 
 router.get('/allusers', async function(req, res, next) {
 
@@ -16,13 +16,27 @@ router.get('/allusers', async function(req, res, next) {
 
 });
 
-/* POST a new user */
+/* POST a new user - FUNCIONAL */
 router.post('/insertnewuser', async function(req, res, next) {
   let newUser = req.body;
   //console.log("[usersRoutes] Saving user " + JSON.stringify(newUser));
   let result = await usersModel.saveUser(newUser);
   res.status(result.status).send(result.result);
 });
+
+/* POST a new user - FUNCIONAL */
+router.post('/insertnewgestor', async function(req, res, next) {
+  let newUser = req.body;
+  //console.log("[usersRoutes] Saving user " + JSON.stringify(newUser));
+  let result = await usersModel.saveUser(newUser);
+  res.status(result.status).send(result.result);
+});
+
+/*ALTERAR TIPO DE UTILIZADOR (NÃO É REVERSIVEL APOS ESCOLHER SER GESTOR)*/
+
+/*METODO PUT AQUI*/
+
+/*TESTAR NO JAVASCRIPT*/
 
 router.post('/loginuser', async function(req, res, next){
   let utilizador_username = req.body;
@@ -33,6 +47,8 @@ router.post('/loginuser', async function(req, res, next){
 
 });
 
+/*APAGAR UTILIZADOR - GESTÃO DOS ADMINISTRADORES - FUNCIONAL*/
+
 router.delete('/deleteuser/:idutilizador', async function(req,res, next){
 
   let id = req.params.idutilizador; 
@@ -42,22 +58,34 @@ router.delete('/deleteuser/:idutilizador', async function(req,res, next){
 
 });
 
-router.put('/changetocreator/update/:idutilizador', async function(req, res, next){
+
+
+router.put('/changetocreator/update/:idutilizador', async function(req, res, next){ //FEITO
 
   let utilizador_id = req.params.idutilizador;
 
   console.log("[artigosRoutes] Update favorite: " + utilizador_id);
-  let result = await usersModel.UpdateType(utilizador_id);
+  let result = await usersModel.UpdateTypeGestor(utilizador_id);
   res.status(result.status).send(result.data);
 
 });
 
-router.put('/changeplateavailability/:idplate', async function(req, res, next){
+router.put('/changeplateavailabilityon/:idplate', async function(req, res, next){
 
   let plate_id = req.params.idplate;
 
   console.log("[artigosRoutes] Update favorite: " + plate_id);
-  let result = await usersModel.UpdateAvailabilityPlate(plate_id);
+  let result = await usersModel.UpdateAvailabilityOnPlate(plate_id);
+  res.status(result.status).send(result.data);
+
+});
+
+router.put('/changeplateavailabilityoff/:idplate', async function(req, res, next){
+
+  let plate_id = req.params.idplate;
+
+  console.log("[artigosRoutes] Update favorite: " + plate_id);
+  let result = await usersModel.UpdateAvailabilityOffPlate(plate_id);
   res.status(result.status).send(result.data);
 
 });
@@ -71,18 +99,20 @@ router.get('/reserva/details/restaurante/:idestabelecimento', async function(req
 
 });
 
-////////// MÉTODOS DE MENUS DE RESTAURANTES ///////////
 
-router.get('/restaurante/menu/seeplates/:idestabelecimento', async function(req, res, next) {
+
+////////// MÉTODOS DE MENUS DE RESTAURANTES //////////////////////////////////////////////////////////////////
+
+router.get('/restaurante/cliente/menu/seeplates/:idestabelecimento', async function(req, res, next) { //FEITO
 
   let estabelecimento_id = req.params.idestabelecimento;
 
-  let result = await usersModel.getRestaurantPlates(estabelecimento_id);
+  let result = await usersModel.getRestaurantPlatesUser(estabelecimento_id);
   res.status(result.status).send(result.data);
 
 });
 
-router.get('/restaurante/:idestabelecimento', async function(req, res, next) {
+router.get('/restaurante/:idestabelecimento', async function(req, res, next) { //DETALHES DO RESTAURANTE -- FEITO
 
   let estabelecimento_id = req.params.idestabelecimento;
 
@@ -91,9 +121,9 @@ router.get('/restaurante/:idestabelecimento', async function(req, res, next) {
 
 });
 
-// FILTRAR PRATOS DE UM RESTAURANTE PELO TIPO
+// FILTRAR PRATOS DE UM RESTAURANTE PELO TIPO -- FEITO
 
-router.get('/restaurante/menu/seeplates/filter/:idestabelecimento/:idplatetype', async function(req, res, next) {
+router.get('/restaurante/cliente/menu/seeplates/filter/:idestabelecimento/:idplatetype', async function(req, res, next) {
 
   let estabelecimento_id = req.params.idestabelecimento;
   let plate_type_id = req.params.idplatetype;
@@ -103,9 +133,27 @@ router.get('/restaurante/menu/seeplates/filter/:idestabelecimento/:idplatetype',
 
 });
 
+////////////////// NUMERO DE LIKES DO RESTAURANTE ////////////////////
 
+router.get('/restaurante/likes/:idestabelecimento', async function(req, res, next) { //FEITO
 
+  let estabelecimento_id = req.params.idestabelecimento;
 
+  let result = await usersModel.getQuantityLikesRestaurant(estabelecimento_id);
+  res.status(result.status).send(result.data);
+
+});
+
+////////////////// NUMERO DE MESAS DISPONIVEIS ////////////////////
+
+router.get('/restaurante/mesas/:idestabelecimento', async function(req, res, next) { //FEITO
+
+  let estabelecimento_id = req.params.idestabelecimento;
+
+  let result = await usersModel.getQuantityMesasRestaurant(estabelecimento_id);
+  res.status(result.status).send(result.data);
+
+});
 
 //OBTER A QUANTIDADE DE MESAS DISPONIVEIS NUM RESTAURANTE
 
@@ -129,7 +177,19 @@ router.get('/reserva/details/restaurante/quantitylikes/:idrestaurante', async fu
 
 });
 
-//OBTER A QUANTIDADE DE LIKES DE UM RESTAURANTE - TERMINAR**********************************************++++
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////// ACOMODACAO ///////////////////////
+router.get('/acomodacao/:idestabelecimento', async function(req, res, next) { //DETALHES DA ACOMODACAO -- FEITO
+
+  let estabelecimento_id = req.params.idestabelecimento;
+
+  let result = await usersModel.getAcomodacaoSingle(estabelecimento_id);
+  res.status(result.status).send(result.data);
+
+});
+
+
+//VERIFICAR SE UTILIZADOR TEM LIKE NUM LOCAL - TERMINAR**********************************************++++
 
 router.get('/checkliked/:idutilizador/:idrestaurante', async function(req, res, next) {
 

@@ -750,12 +750,12 @@ module.exports.saveUser = async function(user) {
         let sql =
             "INSERT " +
             "INTO utilizador " +
-            "(utilizador_name, utilizador_username, utilizador_email, utilizador_password, " + utilizador_type_id + ") " +
+            "(utilizador_name, utilizador_username, utilizador_email, utilizador_password, utilizador_type_id) " +
             "VALUES ($1, $2, $3, $4, $5) " +
             "RETURNING utilizador_id";
 
             //console.log(user.user_name + "|" + user.user_password + "|" + user.user_morada + "|" + user.user_email + "|" + user.user_points + "|" + user.user_admin + "|" + user.user_pt + "|" + user.user_nutri);
-        let result = await pool.query(sql, [user.utilizador_name, user.utilizador_username, user.utilizador_email, password, user.utilizador_type_id]);
+        let result = await pool.query(sql, [user.utilizador_name, user.utilizador_username, user.utilizador_email, password, utilizador_type_id]);
         
         return { status: 200, result: result };
     } catch (err) {
@@ -1129,10 +1129,12 @@ module.exports.getRestaurantDetailsForReserva = async function(est_id) {
     }
 }
 
+/////////// MÉTODO DE DETALHES PARA DEPOIS MARCAR A RESERVA
+
 
 module.exports.getRestaurantSingle = async function(est_id) {
     try {
-        let sql = "SELECT restaurant.establishment_id, restaurant.restaurant_id ,restaurant.establishment_name, restaurant.restaurant_type_id, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name FROM restaurant " + "INNER JOIN type_restaurant ON type_restaurant.type_restaurant_id = restaurant.restaurant_type_id " + "WHERE restaurant.establishment_id = " + est_id;
+        let sql = "SELECT *, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name, place_restaurante.local_id, place_restaurante.local_morada, place_restaurante.ref_system_id, place_restaurante.geometry_info_point, place_restaurante.local_restaurante_id, place_restaurante.local_latitude, place_restaurante.local_longitude FROM restaurant INNER JOIN type_restaurant ON type_restaurant.type_restaurant_id = restaurant.restaurant_type_id INNER JOIN place_restaurante ON place_restaurante.local_restaurante_id = restaurant.restaurant_id WHERE restaurant.restaurant_id = " + est_id;
         let result = await pool.query(sql);
         let users = result.rows;
         console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
@@ -1142,6 +1144,7 @@ module.exports.getRestaurantSingle = async function(est_id) {
         return { status: 500, data: err };
     }
 }
+
 
 //FILTRAR MESAS DISPONIVEIS DE UM RESTAURANTE (INTERIOR E EXTERIOR) - QUESTÃO SOBRE MULTIPLOS OPERADORES 'AND' EM CLAUSULAS 'WHERE'
 module.exports.getRestaurantTablesFilter = async function(rest_id, table_type_id) {
@@ -1217,7 +1220,7 @@ module.exports.getRestaurantPlates = async function(est_id) {
     }
 }
 
-//FILTRAR OS PRATOS DISPONIVEIS DE UM RESTAURANTE PELO SEU TIPO DE PRATO
+//FILTRAR OS PRATOS DISPONIVEIS DE UM RESTAURANTE PELO SEU TIPO DE PRATO 
 
 module.exports.getRestaurantPlatesFilter = async function(est_id, plate_identifier) {
     try {
@@ -1234,7 +1237,7 @@ module.exports.getRestaurantPlatesFilter = async function(est_id, plate_identifi
 
 //PARA O UTILIZADOR -> SELECT DOS PRATOS DISPONIVEIS
 
-module.exports.getRestaurantPlates = async function(est_id) {
+module.exports.getRestaurantPlatesUser = async function(est_id) {
     try {
         let sql = "SELECT plate.plate_id, plate.plate_name, plate.plate_price, plate.plate_restaurant_id, plate.plate_availability, plate.plate_type_identifier, plate.plate_type_description, plate_type.plate_type_id, plate_type.plate_type_name FROM plate INNER JOIN plate_type ON plate_type.plate_type_id = plate.plate_type_identifier WHERE plate.plate_restaurant_id = " + est_id + " AND plate.plate_availability = '0'";
         let result = await pool.query(sql);
@@ -1324,10 +1327,10 @@ module.exports.saveSpot = async function(spot) {
 
 // ALTERAR DISPONIBILIDADE DO PRATO | Disponivel: 1 | Indisponivel: 0 | AMBAS AS FUNÇÕES SERÃO INTEGRADAS NUMA VERIFICACAO DO TIPO 'IF'
 
-module.exports.UpdateAvailabilityOnPlate = async function(plate_id){
+module.exports.UpdateAvailabilityOnPlate = async function(plate_id){ // FEITO
 
     try {
-        let sql = "UPDATE plate " + "SET plate.plate_availability = '1' " + "WHERE plate.plate_id = " + plate_id;
+        let sql = "UPDATE plate " + "SET plate_availability = '0' " + "WHERE plate_id = " + plate_id;
         let result = await pool.query(sql);
         let ementasfound = result.rows;
         console.log("[ementasModel.getEmentasUser] recipes = " + JSON.stringify(ementasfound));
@@ -1339,10 +1342,10 @@ module.exports.UpdateAvailabilityOnPlate = async function(plate_id){
 
 }
 
-module.exports.UpdateAvailabilityOffPlate = async function(plate_id){
+module.exports.UpdateAvailabilityOffPlate = async function(plate_id){//FEITO
 
     try {
-        let sql = "UPDATE plate " + "SET plate.plate_availability = '0' " + "WHERE plate.plate_id = " + plate_id;
+        let sql = "UPDATE plate " + "SET plate_availability = '1' " + "WHERE plate_id = " + plate_id;
         let result = await pool.query(sql);
         let ementasfound = result.rows;
         console.log("[ementasModel.getEmentasUser] recipes = " + JSON.stringify(ementasfound));
@@ -1377,7 +1380,7 @@ module.exports.DeletePrato = async function(plate_id) {
 
 module.exports.getQuantityLikesRestaurant = async function(rest_id) {
     try {
-        let sql = "SELECT COUNT(*) FROM like_establishment WHERE estabelecimento_id = " + rest_id;
+        let sql = "SELECT COUNT(*) FROM like_restaurante WHERE like_restaurante = " + rest_id;
         let result = await pool.query(sql);
         let users = result.rows;
         console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
@@ -1387,6 +1390,76 @@ module.exports.getQuantityLikesRestaurant = async function(rest_id) {
         return { status: 500, data: err };
     }
 }
+
+module.exports.getQuantityMesasRestaurant = async function(rest_id) {
+    try {
+        let sql = "SELECT COUNT(*) FROM mesa WHERE mesa_restaurant_id = " + rest_id + " AND mesa_availability = '0'";
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+//////////////////////////////////////////////////////// ACOMODACAO /////////////////////////////////////////////////////////////////////
+
+module.exports.getAcomodacaoSingle = async function(est_id) {
+    try {
+        let sql = "SELECT *, place_servico_acomodacoes.local_id, place_servico_acomodacoes.local_morada, place_servico_acomodacoes.ref_system_id, place_servico_acomodacoes.geometry_info_point, place_servico_acomodacoes.local_estacionamento_id, place_servico_acomodacoes.local_latitude, place_servico_acomodacoes.local_longitude FROM equipment_service INNER JOIN place_servico_acomodacoes ON place_servico_acomodacoes.local_servico_acomodacoes_id = equipment_service.equipment_service_id WHERE equipment_service.equipment_service_id = " + est_id;
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+///terminar - menos importante
+
+module.exports.getAcomodacaoTypeFilter = async function(rest_id, acomodacao_type_id) {
+    try {
+        let sql = "SELECT *, mesa_type.mesa_type_id, mesa_type.mesa_type_name FROM mesa INNER JOIN mesa_type ON mesa_type.mesa_type_id = mesa.mesa_type_id WHERE mesa.mesa_restaurant_id = " + rest_id + " AND mesa.mesa_availability = '0' AND mesa.mesa_type_id = " + table_type_id;
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.getQuantityLikesAcomodacoesService = async function(rest_id) {
+    try {
+        let sql = "SELECT COUNT(*) FROM like_servico_acomodacao WHERE like_servico_acomodacao = " + rest_id;
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
+module.exports.getQuantityAcomodacoesService = async function(rest_id) {
+    try {
+        let sql = "SELECT COUNT(*) FROM acomodacao WHERE acomodacao_equipment_service_id = " + rest_id + " AND acomodacao_availability = '0'";
+        let result = await pool.query(sql);
+        let users = result.rows;
+        console.log("[usersModel.getUsers] users = " + JSON.stringify(users));
+        return { status: 200, data: users };
+    } catch (err) {
+        console.log(err);
+        return { status: 500, data: err };
+    }
+}
+
 
 //VERIFICAR SE UM UTILIZADOR TEM UM x ESTABELECIMENTO EM QUE DEU LIKE
 
