@@ -22,8 +22,10 @@ $(document).ready(
 
                 for (let i in result) {
                     let h2 = result[i].establishment_name + " - " + result[i].restaurant_type_id
-                    html += ` 
-                            <figure>
+                    html += `
+                    <div class="carousel_4">
+                    <div class="strip"> 
+                        <figure>
 			                    <span class="ribbon off">-30%</span>
 			                    <img src="img/lazy-placeholder.png" data-src="img/location_1.jpg" class="owl-lazy" alt="">
 			                    <a onclick="goInfo(${result[i].establishment_id})" class="strip_info">
@@ -33,7 +35,15 @@ $(document).ready(
 			                        <small>27 Old Gloucester St</small>
 			                        </div>
 			                    </a>
-			                </figure>
+                        </figure>
+                                <ul>
+			                <li><span class="loc_open">Now Open</span></li>
+			                <li>
+			                    <div class="score"><span>Superb<em>350 Reviews</em></span><strong>9.5</strong></div>
+			                </li>
+			            </ul>
+			        </div>
+                    </div>
                     `
                 }
                 console.log("aaaaa"+html)
