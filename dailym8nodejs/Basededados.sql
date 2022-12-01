@@ -680,6 +680,18 @@ ADD COLUMN report_restaurante_date TIMESTAMP
 
 ALTER TABLE report_restaurante
 ALTER COLUMN report_restaurante_date SET DEFAULT now()
+
+ALTER TABLE report_servico_acomodacao
+ADD COLUMN report_servico_acomodacao_date TIMESTAMP
+
+ALTER TABLE report_servico_acomodacao
+ALTER COLUMN report_servico_acomodacao_date SET DEFAULT now()
+
+ALTER TABLE report_estacionamento
+ADD COLUMN report_estacionamento_date TIMESTAMP
+
+ALTER TABLE report_estacionamento
+ALTER COLUMN report_estacionamento_date SET DEFAULT now()
 -------------------------------------------- OBTER DETALHES DOS 250 PRIMEIROS REPORTS ---------------------------------------------------
 
 SELECT report_restaurante.report_id, report_restaurante.report_restaurante_id, report_restaurante.report_restaurante_date,restaurant.restaurant_id, restaurant.establishment_name, restaurant.type_service_identifier, restaurant.restaurante_number_tables, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name, establishment.establishment_id, establishment.establishment_utilizador_id, utilizador.utilizador_id, utilizador.utilizador_name, utilizador.utilizador_username FROM report_restaurante
@@ -928,9 +940,266 @@ CREATE TABLE pack_estacionamento (
 
 ALTER TABLE pack_estacionamento
 ADD CONSTRAINT fk_pack_estacionamento_id FOREIGN KEY (pack_estacionamento_id) REFERENCES parking_lot(parking_lot_id)
+---------------------------------------------------------------------------------------------------------------------------------------
 
+SELECT *, utilizador.utilizador_id, utilizador.utilizador_name, utilizador.utilizador_username, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name FROM restaurant INNER JOIN utilizador ON utilizador.utilizador_id = restaurant.establishment_utilizador_id INNER JOIN type_restaurant ON type_restaurant.type_restaurant_id = restaurant.restaurant_type_id ORDER BY random()
+LIMIT 250
+
+SELECT *, utilizador.utilizador_id, utilizador.utilizador_name, utilizador.utilizador_username FROM equipment_service INNER JOIN utilizador ON utilizador.utilizador_id = equipment_service.establishment_utilizador_id  ORDER BY random()
+LIMIT 250
+
+SELECT *, utilizador.utilizador_id, utilizador.utilizador_name, utilizador.utilizador_username FROM parking_lot INNER JOIN utilizador ON utilizador.utilizador_id = parking_lot.establishment_utilizador_id  ORDER BY random()
+LIMIT 250
 
 --------------------------------------------------------------------------------------------------------------------------------------
+-- APAGAR RESTAURANTE
+
+DELETE FROM report_restaurante WHERE report_restaurante_id = 
+
+DELETE FROM reserva_mesa WHERE reserva.
+
+DELETE FROM mesa WHERE mesa_restaurant_id =
+
+DELETE FROM plate WHERE plate_restaurant_id =
+
+DELETE FROM restaurant WHERE restaurant_id = 
+
+-- APAGAR SERVICO DE ACOMODACAO
+
+DELETE FROM report_restaurante WHERE report_restaurante_id = 
+
+DELETE FROM reserva_mesa WHERE reserva.
+
+DELETE FROM mesa WHERE mesa_restaurant_id =
+
+DELETE FROM plate WHERE plate_restaurant_id =
+
+------------------------------------------------------------------------------
+
+--APAGAR POSIÇÃO DA ACOMODACAO --
+
+DELETE FROM position_acomodacao using acomodacao, equipment_service WHERE position_acomodacao.acomodacao_identifier = acomodacao.acomodacao_id AND acomodacao.acomodacao_equipment_service_id = equipment_service.equipment_service_id AND equipment_service.equipment_service_id = 'x'               
+
+--APAGAR TODAS AS ACOMODACOES DO SERVICO--
+
+DELETE FROM acomodacao WHERE acomodacao_equipment_service_id = 'x'
+
+--APAGAR RESERVAS DE UM SISTEMA DE ACOMODAÇÃO--
+
+DELETE FROM reserva_acomodacao USING acomdacao, equipment_service WHERE reserva_acomodacao.acomodacao_identifier_reservation = acomodacao.acomodacao_id AND acomodacao.acomodacao_equipment_service_id = equipment_service.equipment_service_id AND equipment_service.equipment_service_id = 'x'
+------------------------------------------------------------------------------ ESTABELECIMENTOS ----------------------------------------------------
+
+------- OBTER DETALHES de restaurante PT.1 (NOME DO RESTAURANTE, NUMERO DE MESAS, DESCRICAO, TIPO DE RESTAURANTE, LATITUDE E LONGITUDE PARA MARCAR O PONTO, A DISTANCIA É CALCULADA POR JAVASCRIPT)
+
+SELECT *, type_restaurant.type_restaurant_id, type_restaurant.type_restaurant_name, place_restaurante.local_id, place_restaurante.local_morada, place_restaurante.ref_system_id, place_restaurante.geometry_info_point, place_restaurante.local_restaurante_id, place_restaurante.local_latitude, place_restaurante.local_longitude FROM restaurant INNER JOIN type_restaurant ON type_restaurant.type_restaurant_id = restaurant.restaurant_type_id INNER JOIN place_restaurante ON place_restaurante.local_restaurante_id = restaurant.restaurant_id WHERE restaurant.restaurant_id = 'x'
+
+---------- OBTER NUMERO DE LIKES DO LOCAL (DETALHES DO RESTAURANTE PT.3)
+
+SELECT COUNT(*) FROM like_restaurante WHERE like_restaurante = 'x'
+
+---------- OBTER A QUANTIDADE DE MESAS DISPONIVEIS (DETALHES DO RESTAURANTE PT.4)
+
+SELECT COUNT(*) FROM mesa WHERE mesa_restaurant_id = 'x' AND mesa_availability = '0'
+
+------- OBTER DETALHES de estacionamento PT.1 (NOME DO ESTACIONAMENTO, NUMERO DE LUGARES, DESCRICAO, TIPO DE RESTAURANTE, LATITUDE E LONGITUDE PARA MARCAR O PONTO, A DISTANCIA É CALCULADA POR JAVASCRIPT)
+
+SELECT *, place_estacionamento.local_id, place_estacionamento.local_morada, place_estacionamento.ref_system_id, place_estacionamento.geometry_info_point, place_estacionamento.local_estacionamento_id, place_estacionamento.local_latitude, place_estacionamento.local_longitude 
+FROM parking_lot
+INNER JOIN place_estacionamento ON place_estacionamento.local_estacionamento_id = parking_lot.parking_lot_id
+WHERE parking_lot.parking_lot_id = 'x'
+
+---------- OBTER NUMERO DE LIKES DO LOCAL (DETALHES DO RESTAURANTE PT.3)
+
+SELECT COUNT(*) FROM like_estacionamento
+WHERE like_estacionamento = 'x'
+
+---------- OBTER A QUANTIDADE DE LUGARES DISPONIVEIS (DETALHES DO RESTAURANTE PT.4)
+
+SELECT COUNT(*) FROM spot WHERE spot_parking_lot_id = 'x' AND spot_availability = '0'
+
+------- OBTER DETALHES de SERVICO DE ACOMODACA PT.1 (NOME DO ESTACIONAMENTO, NUMERO DE LUGARES, DESCRICAO, TIPO DE RESTAURANTE, LATITUDE E LONGITUDE PARA MARCAR O PONTO, A DISTANCIA É CALCULADA POR JAVASCRIPT)
+
+SELECT *, place_servico_acomodacoes.local_id, place_servico_acomodacoes.local_morada, place_servico_acomodacoes.ref_system_id, place_servico_acomodacoes.geometry_info_point, place_servico_acomodacoes.local_estacionamento_id, place_servico_acomodacoes.local_latitude, place_servico_acomodacoes.local_longitude FROM equipment_service INNER JOIN place_servico_acomodacoes ON place_servico_acomodacoes.local_servico_acomodacoes_id = equipment_service.equipment_service_id WHERE equipment_service.equipment_service_id = 'x'
+
+---------- OBTER NUMERO DE LIKES DO LOCAL (DETALHES DO RESTAURANTE PT.3)
+
+SELECT COUNT(*) FROM like_servico_acomodacao WHERE like_servico_acomodacao = 'x'
+
+---------- OBTER A QUANTIDADE DE LUGARES DISPONIVEIS (DETALHES DO RESTAURANTE PT.4)
+
+SELECT COUNT(*) FROM acomodacao WHERE acomodacao_equipment_service_id = 'x' AND acomodacao_availability = '0'
+
+---------------- OBTER MENU DE UM RESTAURANTE -----------------
+
+SELECT *, plate_type.plate_type_id, plate_type.plate_type_name 
+FROM plate
+INNER JOIN plate_type ON plate_type.plate_type_id = plate.plate_type_identifier
+WHERE plate.plate_restaurant_id = 'x' AND plate.plate_availability = '0'
+
+------------------ FILTRAR PRATOS POR TIPO --------------------
+
+SELECT *, plate_type.plate_type_id, plate_type.plate_type_name 
+FROM plate
+INNER JOIN plate_type ON plate_type.plate_type_id = plate.plate_type_identifier
+WHERE plate.plate_restaurant_id = 'x' AND plate.plate_availability = '0' AND plate_type.plate_type_id = 'x'
+
+------------------ FILTRAR PRATOS PELA DISPONIBILIDADE ? ----------------
+
+SELECT *, plate_type.plate_type_id, plate_type.plate_type_name 
+FROM plate
+INNER JOIN plate_type ON plate_type.plate_type_id = plate.plate_type_identifier
+WHERE plate.plate_restaurant_id = 'x' AND plate.plate_availability = 'x'
+
+----------------------- OBTER TODAS MESAS DISPONIVEIS (COM A INFORMAÇÃO) ------------------------
+
+SELECT *, mesa_type.mesa_type_id, mesa_type.mesa_type_name
+FROM mesa
+INNER JOIN mesa_type ON mesa_type.mesa_type_id = mesa.mesa_type_id
+WHERE mesa.mesa_restaurant_id = 'x' AND mesa.mesa_availability = '0'
+
+
+----------------------- OBTER TODAS AS ACOMODACOES DISPONIVEIS (COM INFORMAÇÃO DA ACOMODACAO - TIPO DE ACOMODACAO) ------------------------
+
+
+SELECT *, acomodacao_type.acomodacao_type_id, acomodacao_type.acomodacao_type_name
+FROM acomodacao
+INNER JOIN acomodacao_type ON acomodacao_type.acomodacao_type_id = acomodacao.acomodacao_type_id
+WHERE acomodacao.acomodacao_equipment_service_id = 'x' AND acomodacao.acomodacao_availability = '0'
+
+----------------------- OBTER TODOS OS LUGARES DE ESTACIONAMENTO DISPONIVEIS (COM A INFORMAÇÃO) -------------------------------
+
+SELECT *
+FROM spot
+WHERE spot.spot_parking_lot_id = 'x' AND spot.spot_availability = '0'
+
+------------------------- RESERVAR UMA MESA ------------------------
+
+INSERT INTO reserva_mesa (date_marcacao_reservation, user_identifier_reservation, mesa_identifier_reservation, date_marcada_reservation, payment_credit_card_number, payment_cvc_number)
+VALUES('2018-03-25' ,1, 5, '2018-04-05', 'dwh3728dhq291wke', '454')
+
+DELETE FROM reserva_mesa WHERE timestamp < UNIX_TIMESTAMP(DATE_SUB(NOW() - INTERVAL 'DIFERENÇA DOS DIAS + DAYS')) -- DUVIDA DE APAGAR A RESERVA APÓS ALGUM TEMPO
+
+----------------- OBTER O NUMERO DE DIAS QUE FALTAM PARA APAGAR A RESERVA--------------------
+
+SELECT id_reservation, date_marcacao_reservation, date_marcada_reservation, date_marcada_reservation - date_marcacao_reservation AS difference FROM reserva_mesa
+WHERE user_identifier_reservation = 'x' AND mesa_identifier_reservation = 'x'
+
+--------------- 2ª HIPOTESE -> O PROPRIO CLIENTE CONFIRMAR QUE ESTÁ PRESENTE NA RESERVA (MENOS INTUITIVO, MAS POSSIVEL), OU QUANDO CANCELA UMA RESERVA ------------------
+
+DELETE FROM reserva_mesa WHERE user_identifier_reservation = 'x' AND mesa_identifier_reservation = 'x'
+
+------------------- MESA INDISPONIVEL (QUANDO UMA RESERVA É MARCADA OU QUANDO O GESTOR ALTERA O SEU ESTADO) ------------------
+
+UPDATE mesa
+SET mesa.mesa_availability = '1'
+WHERE mesa.mesa_id = 'x'
+
+------------------- MESA DISPONIVEL (QUANDO UMA RESERVA TERMINA, OU QUANDO O GESTOR ALTERA O SEU ESTADO OU QUANDO A RESERVA É CANCELADA)------------------
+
+UPDATE mesa
+SET mesa.mesa_availability = '0'
+WHERE mesa.mesa_id = 'x'
+
+------------------------- RESERVAR UMA ACOMODACAO ------------------------
+
+INSERT INTO reserva_acomodacao (date_marcacao_reservation, user_identifier_reservation, acomodacao_identifier_reservation, date_marcada_reservation, payment_credit_card_number, payment_cvc_number)
+VALUES('2018-03-25' ,1, 5, '2018-04-05', 'dwh3728dhq291wke', '454')
+
+DELETE FROM reserva_acomodacao WHERE timestamp < UNIX_TIMESTAMP(DATE_SUB(NOW() - INTERVAL 'DIFERENÇA DOS DIAS + DAYS')) -- DUVIDA DE APAGAR A RESERVA APÓS ALGUM TEMPO
+
+--------------- 2ª HIPOTESE -> O PROPRIO CLIENTE CONFIRMAR QUE ESTÁ PRESENTE NA RESERVA (MENOS INTUITIVO, MAS POSSIVEL), OU QUANDO CANCELA UMA RESERVA ------------------
+
+DELETE FROM reserva_acomodacao WHERE user_identifier_reservation = 'x' AND acomodacao_identifier_reservation = 'x'
+
+------------------- ACOMODACAO INDISPONIVEL (QUANDO UMA RESERVA É MARCADA OU QUANDO O GESTOR ALTERA O SEU ESTADO) ------------------
+
+UPDATE acomodacao
+SET acomdacao.acomodacao_availability = '1'
+WHERE acomdacao.acomodacao_id = 'x'
+
+------------------- ACOMODACAO DISPONIVEL (QUANDO UMA RESERVA TERMINA, OU QUANDO O GESTOR ALTERA O SEU ESTADO OU QUANDO A RESERVA É CANCELADA)------------------
+
+UPDATE acomodacao
+SET acomdacao.acomodacao_availability = '0'
+WHERE acomdacao.acomodacao_id = 'x'
+
+------------------------- RESERVAR UM LUGAR ------------------------
+
+INSERT INTO reserva_spot (date_marcacao_reservation, user_identifier_reservation, spot_identifier_reservation, date_marcada_reservation, payment_credit_card_number, payment_cvc_number)
+VALUES('2018-03-25' ,1, 5, '2018-04-05', 'dwh3728dhq291wke', '454')
+
+DELETE FROM reserva_spot WHERE timestamp < UNIX_TIMESTAMP(DATE_SUB(NOW() - INTERVAL 'DIFERENÇA DOS DIAS + DAYS')) -- DUVIDA DE APAGAR A RESERVA APÓS ALGUM TEMPO
+
+--------------- 2ª HIPOTESE -> O PROPRIO CLIENTE CONFIRMAR QUE ESTÁ PRESENTE NA RESERVA (MENOS INTUITIVO, MAS POSSIVEL), OU QUANDO CANCELA UMA RESERVA ------------------
+
+DELETE FROM reserva_spot WHERE user_identifier_reservation = 'x' AND spot_identifier_reservation = 'x'
+
+------------------- SPOT INDISPONIVEL (QUANDO UMA RESERVA É MARCADA OU QUANDO O GESTOR ALTERA O SEU ESTADO) ------------------
+
+UPDATE spot
+SET spot.spot_availability = '1'
+WHERE spot.spot_id = 'x'
+
+------------------- SPOT DISPONIVEL (QUANDO UMA RESERVA TERMINA, OU QUANDO O GESTOR ALTERA O SEU ESTADO OU QUANDO A RESERVA É CANCELADA)------------------
+
+UPDATE spot
+SET spot.spot_availability = '0'
+WHERE spot.spot_id = 'x'
+
+----------------- CRIAR RESTAURANTE ------------------
+
+INSERT INTO restaurant(establishment_name, establishment_description, restaurant_type_id, restaurante_number_tables, establishment_utilizador_id, type_service_identifier)
+VALUES ()
+
+----------------- ADICIONAR MESA ----------------------
+
+INSERT INTO mesa(mesa_availability, mesa_number, mesa_size, mesa_restaurant_id, mesa_type_id, mesa_price)
+VALUES ()
+
+--------------- ADICIONAR PRATOS -----------------------
+
+INSERT INTO plate(plate_name, plate_price, plate_restaurant_id, plate_availability, plate_type_identifier, plate_type_description)
+VALUES ()
+
+------------- ALTERAR DISPONIBILIDADE DE PRATOS (DISPONIVEL) -----------------
+
+UPDATE plate
+SET plate.plate_availability = '0'
+WHERE plate.plate_id = 'x'
+
+------------- ALTERAR DISPONIBILIDADE DE PRATOS (INDISPONIVEL) -----------------
+
+UPDATE plate
+SET plate.plate_availability = '1'
+WHERE plate.plate_id = 'x'
+
+----------------- ADICIONAR UMA POSIÇÃO/LOCAL/PLACE PARA O SERVIÇO -------------------
+
+INSERT INTO place_estacionamento (local_morada, ref_system_id, geometry_info_point, local_estacionamento_id, local_latitude, local_longitude)
+VALUES () --- REPETE-SE PARA RESTAURANTES E ACOMODACOES DE PRAIA
+
+------------------- DETALHES DE CONFIRMAÇÃO DA RESERVA -- NÃO MUITO IMPORTANTE | SE SE TIVER TEMPO ADICIONA-SE ---------------------
+
+
+
+--------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------
+
+SELECT id_reservation, date_marcacao_reservation, date_marcada_reservation, date_marcada_reservation - date_marcacao_reservation AS difference FROM reserva_acomodacao
+WHERE user_identifier_reservation = 'x' AND acomodacao_identifier_reservation = 'x'
+
+---------- INSERTS DE TESTE DE MESA ----------
+
+INSERT INTO mesa (mesa_availability ,mesa_number, mesa_size, mesa_restaurant_id, mesa_type_id, mesa_price)
+VALUES ('0' ,12, 3, 5, 2, 12.45)
+
+
+INSERT INTO mesa (mesa_availability ,mesa_number, mesa_size, mesa_restaurant_id, mesa_type_id, mesa_price)
+VALUES ('0' ,6, 2, 5, 1, 8.12)
+
+INSERT INTO mesa (mesa_availability ,mesa_number, mesa_size, mesa_restaurant_id, mesa_type_id, mesa_price)
+VALUES ('1' ,4, 4, 5, 1, 9.21)
+
 
 --- TERMINAR ESTA PARTE DA BASE DE DADOS ----
 CREATE TABLE item_

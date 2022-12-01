@@ -1,4 +1,4 @@
-# fly.toml file generated for dailym8oficial on 2022-11-29T15:04:25Z
+# fly.toml file generated for dailym8oficial on 2022-11-29T17:45:15Z
 
 app = "dailym8oficial"
 kill_signal = "SIGINT"
