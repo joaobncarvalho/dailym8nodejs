@@ -76,7 +76,11 @@ CREATE TABLE utilizador_type (
    utilizador_type_id SERIAL primary key,
    utilizador_type_name varchar(25) not null
 
+
+
 );
+
+-------------------------------------------------------------------------------------------------------------------------------------
 
 CREATE TABLE reservation (
 
@@ -1038,10 +1042,7 @@ WHERE plate.plate_restaurant_id = 'x' AND plate.plate_availability = '0'
 
 ------------------ FILTRAR PRATOS POR TIPO --------------------
 
-SELECT *, plate_type.plate_type_id, plate_type.plate_type_name 
-FROM plate
-INNER JOIN plate_type ON plate_type.plate_type_id = plate.plate_type_identifier
-WHERE plate.plate_restaurant_id = 'x' AND plate.plate_availability = '0' AND plate_type.plate_type_id = 'x'
+SELECT *, plate_type.plate_type_id, plate_type.plate_type_name FROM plate INNER JOIN plate_type ON plate_type.plate_type_id = plate.plate_type_identifier WHERE plate.plate_restaurant_id = 'x' AND plate.plate_availability = '0' AND plate_type.plate_type_id = 'x'
 
 ------------------ FILTRAR PRATOS PELA DISPONIBILIDADE ? ----------------
 
@@ -1204,4 +1205,15 @@ VALUES ('1' ,4, 4, 5, 1, 9.21)
 --- TERMINAR ESTA PARTE DA BASE DE DADOS ----
 CREATE TABLE item_
 
+--------------------------------------------------------------------------
+CREATE TABLE comentario_site (
 
+	comentario_site_id serial primary key,
+	comentario_texto varchar(1000) NOT NULL,
+	comentario_utilizador_id int NOT NULL,
+	comentario_date date DEFAULT CURRENT_DATE NOT NULL
+
+);
+
+ALTER TABLE comentario_site 
+ADD CONSTRAINT fk_comentario_utilizador_id FOREIGN KEY (comentario_utilizador_id) REFERENCES utilizador (utilizador_id)
