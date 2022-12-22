@@ -1217,3 +1217,32 @@ CREATE TABLE comentario_site (
 
 ALTER TABLE comentario_site 
 ADD CONSTRAINT fk_comentario_utilizador_id FOREIGN KEY (comentario_utilizador_id) REFERENCES utilizador (utilizador_id)
+
+------------------------------------------------------------------------------
+
+ALTER TABLE equipment_service
+ADD COLUMN state_id int NOT NULL DEFAULT 1
+
+ALTER TABLE parking_lot
+ADD COLUMN state_id int NOT NULL DEFAULT 1
+
+ALTER TABLE restaurant
+ADD COLUMN state_id int NOT NULL DEFAULT 1
+
+ALTER TABLE equipment_service
+ADD CONSTRAINT fk_state_id FOREIGN KEY(state_id) REFERENCES state_type(state_id)
+
+ALTER TABLE parking_lot
+ADD CONSTRAINT fk_state_id FOREIGN KEY(state_id) REFERENCES state_type(state_id)
+
+ALTER TABLE restaurant
+ADD CONSTRAINT fk_state_id FOREIGN KEY(state_id) REFERENCES state_type(state_id)
+
+CREATE TABLE state_type (
+
+  state_id SERIAL primary key,
+  state_name varchar(100) NOT NULL
+
+)
+
+INSERT INTO state_type(state_name) VALUES ('Não Analisado'), ('Em Análise'), ('Verificado')

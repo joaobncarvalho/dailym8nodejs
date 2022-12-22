@@ -2,6 +2,9 @@ var express = require('express');
 var router = express.Router();
 var usersModel = require('../models/usersModel');
 
+router.get('/', function(req, res, next) {
+  res.send('Working?');
+});
 /* GET users listing. - FUNCIONAL */
 router.get('/helloworldtest', function(req, res, next) {
   res.send('Hello World');
